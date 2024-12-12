@@ -1,4 +1,4 @@
-program Typing;
+program f2;
 
 {$APPTYPE CONSOLE}
 
@@ -9,6 +9,22 @@ uses
   Math;
 
 var a:integer;
+
+function inputt(l:integer):string;
+var s:string;
+begin
+  readln(s);
+  Result:=s;
+  if (length(s)<l) then
+  begin
+    for var i := length(s)+1 to l do
+      Result:=Result+'0';
+  end
+  else
+  begin
+    delete(Result,l+1,length(s)-l);
+  end;
+end;
 
 function makeWord(length :integer) :string;
 var
@@ -44,7 +60,8 @@ var
   s0,word:string;
   i,j:integer;
 begin
-  readln(s0);
+  //readln(s0);
+  s0:=inputt(length(s));
   Result:='';
   if (s0<>s) then
   begin
@@ -133,4 +150,3 @@ begin
   else writeln('Exit');
   readln;
 end.
-
