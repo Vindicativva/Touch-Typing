@@ -7,6 +7,8 @@ program Typing;
 uses
   System.SysUtils;
 
+
+
 begin
 
 end.
