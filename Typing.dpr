@@ -24,12 +24,6 @@ const
    ['accomplish', 'deliberate', 'endangered', 'foundation', 'generation', 'helicopter', 'impossible', 'journalism', 'literature', 'motivation', 'playground', 'revolution', 'surprising', 'blackberry', 'developing', 'expedition', 'television', 'uplifting', 'prosperous', 'management']];
 
 
-
-
-var
-  orig_str, user_str :string;
-  round_num :integer;
-
 procedure ClearConsole;
 var
   Handle: THandle;
@@ -105,7 +99,6 @@ begin
   var i:=Random(length(dic[l-1])-1);
   Result:=dic[l-1][i];
 end;
-
 
 function inputt(l:integer):string;
 var s:string;
@@ -211,7 +204,7 @@ begin
   var koef,num_round,l:integer;
   l:=20;
   num_round:=0;
-  new_round(round_num);
+  new_round(num_round);
   koef:=num_round*2;
   flag:=true;
   f1(dicti,s,l);
