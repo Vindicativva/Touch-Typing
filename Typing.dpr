@@ -74,7 +74,7 @@ begin
 end;
 
 begin
-  l := 2;
+  l := 20;
   f1(Dicti, s, l);
   writeln(s);
   readln;
