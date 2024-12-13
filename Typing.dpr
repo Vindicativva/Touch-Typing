@@ -1,4 +1,4 @@
-program Typing;
+﻿program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
@@ -23,12 +23,6 @@ const
    ['attention', 'brilliant', 'confusion', 'education', 'expansion', 'generator', 'happiness', 'languages', 'marketing', 'notorious', 'operation', 'potential', 'reception', 'selection', 'technical', 'universal', 'workforce', 'telephone', 'universal'],
    ['accomplish', 'deliberate', 'endangered', 'foundation', 'generation', 'helicopter', 'impossible', 'journalism', 'literature', 'motivation', 'playground', 'revolution', 'surprising', 'blackberry', 'developing', 'expedition', 'television', 'uplifting', 'prosperous', 'management']];
 
-
-
-
-var
-  orig_str, user_str :string;
-  round_num :integer;
 
 procedure ClearConsole;
 var
@@ -106,7 +100,6 @@ begin
   Result:=dic[l-1][i];
 end;
 
-
 function inputt(l:integer):string;
 var s:string;
 begin
@@ -123,7 +116,8 @@ begin
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; dicti : dc):string;
+
+function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
 var
   s0,word:string;
   i,j:integer;
@@ -134,7 +128,6 @@ begin
   if (s0<>s) then
   begin
     if (pos('13',s0)=0) then
-
     begin
       i:=1;
       while (length(s)<>0) do
@@ -166,10 +159,21 @@ begin
             delete(s,1,length(word));
             delete(s0,1,length(word));
             var t:string;
-            t:=zamena(dicti,length(word));
-            while (t=word) and (length(t)<>1) do
+            if (length(word)>10) then
+            begin
+              f1(dicti,t,length(word));
+              while (t=word) and (length(t)<>1) do
+              begin
+                f1(dicti,t,length(word));
+              end;
+            end
+            else
             begin
               t:=zamena(dicti,length(word));
+              while (t=word) and (length(t)<>1) do
+              begin
+                t:=zamena(dicti,length(word));
+              end;
             end;
             Result:=Result+t;
           end
@@ -201,6 +205,7 @@ begin
       end;
     end
     else flag:=false;
+    l:=length(Result);
   end;
 
 end;
@@ -210,18 +215,22 @@ begin
   var flag:boolean;
   var koef,num_round,l:integer;
   l:=20;
+  writeln('Вас приветсвует тренажер слепой печати. Вводите предложения за нами');
+  sleep(3000);
   num_round:=0;
-  new_round(round_num);
+  new_round(num_round);
   koef:=num_round*2;
   flag:=true;
   f1(dicti,s,l);
   writeln(s);
   while flag do
   begin
-    s:=f22(s,num_round*2,flag,dicti);
+    s:=f22(s,num_round*2,flag,dicti,l);
+    if flag then
     if (s='') then
     begin
       dec(l,2);
+      l:=max(0,l);
       if l=0 then
       begin
         new_round(num_round);
@@ -230,8 +239,23 @@ begin
       f1(dicti,s,l);
       writeln (s);
     end
-    else writeln(s);
+    else
+    begin
+      if (length(s)<156) then writeln(S)
+      else
+      begin
+        dec(num_round);
+        write('Попробуйте заново');
+        sleep(3000);
+        new_round(num_round);
+        l:=20;
+        f1(dicti,s,l);
+        writeln(s);
+      end;
+    end;
   end;
   writeln('Игра закончена');
   readln;
 end.
+//длина строки консоли - 156
+
