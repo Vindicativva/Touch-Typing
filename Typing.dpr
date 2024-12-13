@@ -1,4 +1,4 @@
-program Typing;
+﻿program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
@@ -12,7 +12,7 @@ Type
   Dc = Array Of Array of String;
 const
   Dicti: Dc =
-  [['a'],
+  [['a','i'],
    ['at', 'to', 'in', 'on', 'by', 'he', 'we', 'it', 'an', 'be', 'do', 'up', 'no', 'so', 'go', 'is', 'me', 'my', 'if', 'of'],
    ['cat', 'dog', 'hat', 'sun', 'run', 'red', 'bed', 'bag', 'map', 'key', 'box', 'top', 'fan', 'pen', 'cup', 'car', 'leg', 'sit', 'win', 'kit'],
    ['book', 'cake', 'door', 'fish', 'game', 'hand', 'idea', 'jump', 'king', 'lamp', 'moon', 'nest', 'page', 'rain', 'star', 'tree', 'wave', 'wind', 'word', 'year'],
@@ -24,11 +24,7 @@ const
    ['accomplish', 'deliberate', 'endangered', 'foundation', 'generation', 'helicopter', 'impossible', 'journalism', 'literature', 'motivation', 'playground', 'revolution', 'surprising', 'blackberry', 'developing', 'expedition', 'television', 'uplifting', 'prosperous', 'management']];
 
 
-
-
-var
-  orig_str, user_str :string;
-  round_num :integer;
+const otstup='     ';
 
 procedure ClearConsole;
 var
@@ -70,7 +66,8 @@ procedure new_round(var round_num :integer);
 begin
   inc(round_num);
   ClearConsole;
-  writeln('Раунд ', round_num);
+  writeln(otstup,'Раунд ', round_num);
+  writeln;
 end;
 
 procedure f1(const Dic: Dc; var str: string; k: integer);
@@ -78,22 +75,24 @@ var
   l: integer;
   word: string;
 begin
-  Str:= '';
   Randomize;
   while length(Str) < k do
   begin
     if k >= 9 then
-      l := Random(10)
+      l := Random(9)
     else
       l := Random(k);
     word:= Dic[l][Random(length(Dic[l]))];
-    if ((k - length(Str) - (l + 1)) <= 6) and ((k - length(Str) - (l + 1)) >= 2) then
+    if Random(5)  = 0 then
+      Word[1] := chr(Ord(Word[1]) - 32);
+
+    if ((k - length(Str) - l) <= 6) and ((k - length(Str) - (l + 1)) >= 2) then
     begin
        Str:= Str + word + ' ';
        Str:= Str + Dic[k - length(Str)-1][Random(length(Dic[k - length(Str)-1]))];
     end
-    else if (k - length(Str) - (l + 1)) = 0 then
-      Str:= Str + word
+    else if (k - length(str) - (l + 1)) = 0 then
+      str := str + word
     else if (k - length(Str) - (l + 1)) > 6 then
        Str:= Str + word + ' ';
   end;
@@ -102,7 +101,7 @@ end;
 function zamena(const dic:dc; l:integer):string;
 begin
   Randomize;
-  var i:=Random(length(dic[l-1])-1);
+  var i:=Random(length(dic[l-1]));
   Result:=dic[l-1][i];
 end;
 
@@ -112,6 +111,7 @@ var s:string;
 begin
   readln(s);
   Result:=s;
+  if (Result<>'13') then
   if (length(s)<l) then
   begin
     for var i := length(s)+1 to l do
@@ -123,20 +123,78 @@ begin
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; dicti : dc):string;
+
+function spaces(s:string; s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer):string;
+begin
+  result:='';
+  for var i := 1 to length(s) do
+  begin
+    if (s[i]=s0[i]) then
+    begin
+      inc(sovp_spaces);
+    end
+    else
+    begin
+      inc(nesovp_spaces);
+      for var j := 1 to koef do
+        Result:=Result+' ';
+    end;
+  end;
+  if (sovp_spaces<>0) then Result:=Result+' ';
+  chisl:=chisl+max(0,length(s)-length(result));
+end;
+
+procedure deleting_spaces(var s:string; var s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer);
+begin
+  var i,sovp_spaces1,nesovp_spaces1:integer;
+  i:=1;
+
+  while i<length(s) do
+  begin
+    sovp_spaces1:=0; nesovp_spaces1:=0;
+    if (s[i]=' ') then
+    begin
+      var j:integer;
+      j:=i+1;
+      while (s[j]=' ') do
+        inc(j);
+      var s1,s2,s3:string;
+      s1:=copy(s,i,j-i);
+      s2:=copy(s0,i,j-i);
+      s3:=spaces(s1,s2,sovp_spaces1,nesovp_spaces1,chisl,koef);
+      inc(sovp_spaces,sovp_spaces1);
+      inc(nesovp_spaces,nesovp_spaces1);
+      delete(s,i,j-i);
+      delete(s0,i,j-i);
+      insert(s3,s,i);
+      insert(s3,s0,i);
+      inc(i,length(s3)-1);
+    end;
+    inc(i);
+  end;
+end;
+
+function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
 var
   s0,word:string;
-  i,j:integer;
+  i,j,p:integer;
 begin
   //readln(s0);
+  var sovp_spaces:integer;
+  var nesovp_spaces:integer;
+  sovp_spaces:=0;
+  nesovp_spaces:=0;
   s0:=inputt(length(s));
+  p:=length(s);
   Result:='';
   if (s0<>s) then
   begin
-    if (pos('13',s0)=0) then
-
+    if (s0<>'13') then
     begin
       i:=1;
+      var chisl:integer;
+      chisl:=0;
+      deleting_spaces(s, s0, sovp_spaces,nesovp_spaces,chisl, koef);
       while (length(s)<>0) do
       begin
         if (s[1]=' ') then
@@ -166,10 +224,23 @@ begin
             delete(s,1,length(word));
             delete(s0,1,length(word));
             var t:string;
-            t:=zamena(dicti,length(word));
-            while (t=word) and (length(t)<>1) do
+            if (length(word)>10) then
+            begin
+              f1(dicti,t,length(word));
+              while (t=word) do
+              begin
+                f1(dicti,t,length(word));
+              end;
+            end
+            else
             begin
               t:=zamena(dicti,length(word));
+              while (t=word) do
+              begin
+                t:=zamena(dicti,length(word));
+              end;
+              if (Random(5)=0) then
+                Word[1] := chr(Ord(Word[1]) - 32);
             end;
             Result:=Result+t;
           end
@@ -201,37 +272,74 @@ begin
       end;
     end
     else flag:=false;
+    l:=max(p,length(Result));
   end;
-
 end;
+
 
 begin
   var s,k :string;
   var flag:boolean;
   var koef,num_round,l:integer;
   l:=20;
+  write(otstup,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
+  readln;
   num_round:=0;
-  new_round(round_num);
+  new_round(num_round);
   koef:=num_round*2;
   flag:=true;
   f1(dicti,s,l);
-  writeln(s);
+  writeln(otstup,s);
   while flag do
   begin
-    s:=f22(s,num_round*2,flag,dicti);
+    write(otstup);
+    s:=f22(s,num_round*2,flag,dicti,l);
+    writeln;
+    if flag then
     if (s='') then
     begin
       dec(l,2);
+      l:=max(0,l);
       if l=0 then
       begin
         new_round(num_round);
         l:=20;
       end;
       f1(dicti,s,l);
-      writeln (s);
+      writeln (otstup,s);
     end
-    else writeln(s);
+    else
+    begin
+      if (length(s)<156) then
+      begin
+       writeln(otstup,S);
+      end
+      else
+      begin
+        dec(num_round);
+        write(otstup,'Попробуйте заново. Нажмите любую кнопку для продолжения');
+        readln;
+        new_round(num_round);
+        l:=20;
+        s:='';
+        f1(dicti,s,l);
+        writeln(otstup,s);
+      end;
+    end;
   end;
-  writeln('Игра закончена');
+  writeln(otstup,'Игра закончена');
+  var sovp_spaces:integer; var nesovp_spaces:integer;
+  {readln(s);
+  readln(k);
+  var chisl:integer;
+  chisl:=0;
+  deleting_spaces(s,k,koef,num_round,chisl,2);
+  writeln(s);
+  writeln(chisl);}
+  //writeln('+',spaces(s,k,sovp_spaces,nesovp_spaces,2),'+ ',' ',sovp_spaces,' ',nesovp_spaces,' ',length(spaces(s,k,sovp_spaces,nesovp_spaces,2)));
   readln;
 end.
+//длина строки консоли - 156
+{ghgh       ghgj   jf g g
+ghgh d d d ghgj d jf gdg}
+
