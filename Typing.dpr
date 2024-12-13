@@ -116,8 +116,6 @@ begin
   end;
 end;
 
-
-
 function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
 var
   s0,word:string;
