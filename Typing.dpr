@@ -105,7 +105,6 @@ begin
   Result:=dic[l-1][i];
 end;
 
-
 function inputt(l:integer):string;
 var s:string;
 begin
