@@ -35,6 +35,9 @@ begin
     else
       l := Random(k);
     word:= Dic[l][Random(length(Dic[l]))];
+    if Random(5)  = 0 then
+      Word[1] := chr(Ord(Word[1]) - 32);
+
     if ((k - length(Str) - l) <= 6) and ((k - length(Str) - (l + 1)) >= 2) then
     begin
        Str:= Str + word + ' ';
