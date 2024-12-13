@@ -116,7 +116,9 @@ begin
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; dicti : dc):string;
+
+
+function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
 var
   s0,word:string;
   i,j:integer;
@@ -127,7 +129,6 @@ begin
   if (s0<>s) then
   begin
     if (pos('13',s0)=0) then
-
     begin
       i:=1;
       while (length(s)<>0) do
@@ -159,10 +160,21 @@ begin
             delete(s,1,length(word));
             delete(s0,1,length(word));
             var t:string;
-            t:=zamena(dicti,length(word));
-            while (t=word) and (length(t)<>1) do
+            if (length(word)>10) then
+            begin
+              f1(dicti,t,length(word));
+              while (t=word) and (length(t)<>1) do
+              begin
+                f1(dicti,t,length(word));
+              end;
+            end
+            else
             begin
               t:=zamena(dicti,length(word));
+              while (t=word) and (length(t)<>1) do
+              begin
+                t:=zamena(dicti,length(word));
+              end;
             end;
             Result:=Result+t;
           end
@@ -194,6 +206,7 @@ begin
       end;
     end
     else flag:=false;
+    l:=length(Result);
   end;
 
 end;
@@ -211,10 +224,12 @@ begin
   writeln(s);
   while flag do
   begin
-    s:=f22(s,num_round*2,flag,dicti);
+    s:=f22(s,num_round*2,flag,dicti,l);
+    if flag then
     if (s='') then
     begin
       dec(l,2);
+      l:=max(0,l);
       if l=0 then
       begin
         new_round(num_round);
