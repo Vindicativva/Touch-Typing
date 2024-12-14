@@ -1,17 +1,42 @@
-﻿program Typing;
+program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
-  Windows,System.SysUtils,
+  Windows,
+  System.SysUtils,
   Math;
-  {$ENDIF}
+
+{$ENDIF}
+
+(*
+FunctionFunction - Функция
+variable_variable - Переменная
+
+Variables
+paragraph - Отступ с левой стороны консоли
+number_of_round - Номер раунда
+
+Functions
+GetWordFromFile - Функция, которая возвращает слово, требуемой длины
+ReplaceWord - Функция замены слова на другое слово такой жк длины
+  length_of_word - Длина заменяемого слова
+
+
+Main - Обработка главных функций программы
+
+Procedures
+
+
+f1 -
+
+
+*)
 
 var
   n, a: integer;
   lang: string;
 
-
-const Paragraph='     ';
+const Paragraph = '     '; //отступ перед выводом на экран
 
 // процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
@@ -44,7 +69,6 @@ begin
   end;
   {$ENDIF}
 end;
-
 
 // процедура NewRound - Обновление раунда
 // number_of_round - Номер текущего раунда
@@ -129,7 +153,6 @@ begin
   end;
 end;
 
-
 //ControlSpaces - Функция, которая возвращает измененный пробельный кусок в соответствии с вводом пользователя
 //  part_of_s - пробельный кусок строки которую надо ввести
 //  part_of_user_string - кусок который ввел пользователь как соответствующий пробельный кусок
@@ -211,7 +234,7 @@ begin
         begin
           if (s0[1]<>' ') then
           begin
-            for var k := 1 to koef do
+            for var k := 1 to coef do
             begin
               Result:=Result+s[1];
             end;
@@ -268,7 +291,7 @@ begin
               end
               else
               begin
-                for var k := 1 to koef do
+                for var k := 1 to coef do
                 begin
                   Result:=Result+s[1];
                 end;
@@ -292,7 +315,7 @@ begin
   SetConsoleOutputCP(65001);
   var s,k :string;
   var flag:boolean;
-  var koef,num_round,l:integer;
+  var coef,number_of_round,l:integer;
   l:=20;
   write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
   readln;
