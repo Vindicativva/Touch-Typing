@@ -1,10 +1,36 @@
-﻿program Typing;
+program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
-  Windows,System.SysUtils,
+  Windows,
+  System.SysUtils,
   Math;
-  {$ENDIF}
+
+{$ENDIF}
+
+(*
+FunctionFunction - Функция
+variable_variable - Переменная
+
+Variables
+paragraph - Отступ с левой стороны консоли
+number_of_round - Номер раунда
+
+Functions
+GetWordFromFile - Функция, которая возвращает слово, требуемой длины
+ReplaceWord - Функция замены слова на другое слово такой жк длины
+  length_of_word - Длина заменяемого слова
+
+
+Main - Обработка главных функций программы
+
+Procedures
+
+
+f1 -
+
+
+*)
 
 var a:integer;
 
@@ -23,9 +49,9 @@ const
    ['attention', 'brilliant', 'confusion', 'education', 'expansion', 'generator', 'happiness', 'languages', 'marketing', 'notorious', 'operation', 'potential', 'reception', 'selection', 'technical', 'universal', 'workforce', 'telephone', 'universal'],
    ['accomplish', 'deliberate', 'endangered', 'foundation', 'generation', 'helicopter', 'impossible', 'journalism', 'literature', 'motivation', 'playground', 'revolution', 'surprising', 'blackberry', 'developing', 'expedition', 'television', 'uplifting', 'prosperous', 'management']];
 
+const Paragraph = '     '; //отступ перед выводом на экран
 
-const otstup='     ';
-
+// процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
 var
   Handle: THandle;
@@ -53,20 +79,17 @@ begin
       // Move the cursor to the top left
       SetConsoleCursorPosition(Handle, TopLeft);
     end;
-
-
   end;
-
-
   {$ENDIF}
 end;
 
-
-procedure new_round(var round_num :integer);
+// процедура NewRound - Обновление раунда
+// number_of_round - Номер текущего раунда
+procedure NewRound(var number_of_round: integer);
 begin
-  inc(round_num);
+  inc(number_of_round);
   ClearConsole;
-  writeln(otstup,'Раунд ', round_num);
+  writeln(Paragraph,'Раунд ', number_of_round);
   writeln;
 end;
 
@@ -98,92 +121,93 @@ begin
   end;
 end;
 
-function zamena(const dic:dc; l:integer):string;
+function ReplaceWord(const dic:dc; length_of_word:integer):string;
+var i: integer;
 begin
   Randomize;
-  var i:=Random(length(dic[l-1]));
-  Result:=dic[l-1][i];
+  i := Random(length(dic[length_of_word-1]));
+  Result := dic[length_of_word-1][i];
 end;
 
-function inputt(l:integer):string;
-var s:string;
+// функция UpdateInput - Функция возвращающая введённую строку измененную под нужную длину
+//  length_of_string - Длина исходной строки
+function UpdateInput (length_of_string: integer): string;
+var user_string: string; //  user_string - Строка пользователя
 begin
-  readln(s);
-  Result:=s;
-  if (Result<>'13') then
-  if (length(s)<l) then
+  readln(user_string);
+  Result := user_string;
+  if (Result <> '13') then
+  if (length(user_string) < length_of_string) then
   begin
-    for var i := length(s)+1 to l do
-      Result:=Result+'0';
+    for var i := length(user_string) + 1 to length_of_string do
+      Result := Result + '0';
   end
   else
   begin
-    delete(Result,l+1,length(s)-l);
+    delete(Result,length_of_string+1,length(user_string)-length_of_string);
   end;
 end;
 
-
-function spaces(s:string; s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer):string;
+//ControlSpaces - Функция, которая возвращает измененный пробельный кусок в соответствии с вводом пользователя
+//  part_of_s - пробельный кусок строки которую надо ввести
+//  part_of_user_string - кусок который ввел пользователь как соответствующий пробельный кусок
+//  coef - Коеффициент
+function ControlSpaces(part_of_s:string; part_of_user_string:string; coef:integer):string;
+var  
+  i, j:integer; 
+  matching_spaces: boolean; //станет истиной если хотя бы один пробел совпадает 
 begin
-  result:='';
-  for var i := 1 to length(s) do
+  matching_spaces := false;
+  Result := '';
+  for i := 1 to length(part_of_s) do
   begin
-    if (s[i]=s0[i]) then
+    if (part_of_s[i]=part_of_user_string[i]) then
     begin
-      inc(sovp_spaces);
+      matching_spaces := true;
     end
     else
     begin
-      inc(nesovp_spaces);
-      for var j := 1 to koef do
-        Result:=Result+' ';
+      for j := 1 to coef do
+        Result := Result + ' ';
     end;
   end;
-  if (sovp_spaces<>0) then Result:=Result+' ';
-  chisl:=chisl+max(0,length(s)-length(result));
+  if (matching_spaces) then Result:=Result+' ';
 end;
 
-procedure deleting_spaces(var s:string; var s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer);
+// процедура DeleteSpaces - Обработать всю строку на пробелы
+//  s - Строка, которую надо ввести пользователю
+//  user_string - Строка, которую ввёл пользователь
+procedure DeleteSpaces(var s:string; var user_string:string; coef:integer);
+var 
+  i, j: integer;
+  modified_spaces:string; //измененные в строках пробелы
 begin
-  var i,sovp_spaces1,nesovp_spaces1:integer;
-  i:=1;
-
-  while i<length(s) do
+  i := 1;
+  while i < length(s) do
   begin
-    sovp_spaces1:=0; nesovp_spaces1:=0;
-    if (s[i]=' ') then
+    if (s[i] = ' ') then
     begin
-      var j:integer;
-      j:=i+1;
-      while (s[j]=' ') do
+      j := i+1;
+      while (s[j] = ' ') do
         inc(j);
-      var s1,s2,s3:string;
-      s1:=copy(s,i,j-i);
-      s2:=copy(s0,i,j-i);
-      s3:=spaces(s1,s2,sovp_spaces1,nesovp_spaces1,chisl,koef);
-      inc(sovp_spaces,sovp_spaces1);
-      inc(nesovp_spaces,nesovp_spaces1);
+      modified_spaces := ControlSpaces(copy(s,i,j-i), copy(user_string,i,j-i), coef);
       delete(s,i,j-i);
-      delete(s0,i,j-i);
-      insert(s3,s,i);
-      insert(s3,s0,i);
-      inc(i,length(s3)-1);
+      delete(user_string,i,j-i);
+      insert(modified_spaces,s,i);
+      insert(modified_spaces,user_string,i);
+      inc(i,length(modified_spaces)-1);
     end;
     inc(i);
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
+function Main(s:string; coef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
 var
   s0,word:string;
   i,j,p:integer;
 begin
   //readln(s0);
-  var sovp_spaces:integer;
-  var nesovp_spaces:integer;
-  sovp_spaces:=0;
-  nesovp_spaces:=0;
-  s0:=inputt(length(s));
+  s0:=UpdateInput(length(s));
   p:=length(s);
   Result:='';
   if (s0<>s) then
@@ -191,16 +215,14 @@ begin
     if (s0<>'13') then
     begin
       i:=1;
-      var chisl:integer;
-      chisl:=0;
-      deleting_spaces(s, s0, sovp_spaces,nesovp_spaces,chisl, koef);
+      DeleteSpaces(s, s0, coef);
       while (length(s)<>0) do
       begin
         if (s[1]=' ') then
         begin
           if (s0[1]<>' ') then
           begin
-            for var k := 1 to koef do
+            for var k := 1 to coef do
             begin
               Result:=Result+s[1];
             end;
@@ -233,10 +255,10 @@ begin
             end
             else
             begin
-              t:=zamena(dicti,length(word));
+              t:=ReplaceWord(dicti,length(word));
               while (t=word) do
               begin
-                t:=zamena(dicti,length(word));
+                t:=ReplaceWord(dicti,length(word));
               end;
               if (Random(5)=0) then
                 Word[1] := chr(Ord(Word[1]) - 32);
@@ -257,7 +279,7 @@ begin
               end
               else
               begin
-                for var k := 1 to koef do
+                for var k := 1 to coef do
                 begin
                   Result:=Result+s[1];
                 end;
@@ -271,7 +293,7 @@ begin
       end;
     end
     else flag:=false;
-    l:=max(p,length(Result));
+    l:=length(Result);
   end;
 end;
 
@@ -279,20 +301,20 @@ end;
 begin
   var s,k :string;
   var flag:boolean;
-  var koef,num_round,l:integer;
+  var coef,number_of_round,l:integer;
   l:=20;
-  write(otstup,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
+  write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
   readln;
-  num_round:=0;
-  new_round(num_round);
-  koef:=num_round*2;
+  number_of_round:=0;
+  NewRound(number_of_round);
+  coef:=number_of_round*2;
   flag:=true;
   f1(dicti,s,l);
-  writeln(otstup,s);
+  writeln(Paragraph,s);
   while flag do
   begin
-    write(otstup);
-    s:=f22(s,num_round*2,flag,dicti,l);
+    write(Paragraph);
+    s:=Main(s,number_of_round*2,flag,dicti,l);
     writeln;
     if flag then
     if (s='') then
@@ -301,44 +323,32 @@ begin
       l:=max(0,l);
       if l=0 then
       begin
-        new_round(num_round);
+        NewRound(number_of_round);
         l:=20;
       end;
       f1(dicti,s,l);
-      writeln (otstup,s);
+      writeln (Paragraph,s);
     end
     else
     begin
       if (length(s)<156) then
       begin
-       writeln(otstup,S);
+       writeln(Paragraph,S);
       end
       else
       begin
-        dec(num_round);
-        write(otstup,'Попробуйте заново. Нажмите любую кнопку для продолжения');
+        dec(number_of_round);
+        write(Paragraph,'Попробуйте заново. Нажмите любую кнопку для продолжения');
         readln;
-        new_round(num_round);
+        NewRound(number_of_round);
         l:=20;
         s:='';
         f1(dicti,s,l);
-        writeln(otstup,s);
+        writeln(Paragraph,s);
       end;
     end;
   end;
-  writeln(otstup,'Игра закончена');
-  var sovp_spaces:integer; var nesovp_spaces:integer;
-  {readln(s);
-  readln(k);
-  var chisl:integer;
-  chisl:=0;
-  deleting_spaces(s,k,koef,num_round,chisl,2);
-  writeln(s);
-  writeln(chisl);}
-  //writeln('+',spaces(s,k,sovp_spaces,nesovp_spaces,2),'+ ',' ',sovp_spaces,' ',nesovp_spaces,' ',length(spaces(s,k,sovp_spaces,nesovp_spaces,2)));
+  writeln(Paragraph,'Игра закончена');
   readln;
 end.
 //длина строки консоли - 156
-{ghgh       ghgj   jf g g
-ghgh d d d ghgj d jf gdg}
-
