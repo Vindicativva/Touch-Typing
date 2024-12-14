@@ -6,26 +6,14 @@ uses
   Math;
   {$ENDIF}
 
-var a:integer;
-
-Type
-  Dc = Array Of Array of String;
-const
-  Dicti: Dc =
-  [['a','i'],
-   ['at', 'to', 'in', 'on', 'by', 'he', 'we', 'it', 'an', 'be', 'do', 'up', 'no', 'so', 'go', 'is', 'me', 'my', 'if', 'of'],
-   ['cat', 'dog', 'hat', 'sun', 'run', 'red', 'bed', 'bag', 'map', 'key', 'box', 'top', 'fan', 'pen', 'cup', 'car', 'leg', 'sit', 'win', 'kit'],
-   ['book', 'cake', 'door', 'fish', 'game', 'hand', 'idea', 'jump', 'king', 'lamp', 'moon', 'nest', 'page', 'rain', 'star', 'tree', 'wave', 'wind', 'word', 'year'],
-   ['apple', 'bread', 'chair', 'dance', 'eagle', 'flame', 'great', 'house', 'input', 'juice', 'enjoy', 'lemon', 'magic', 'night', 'ocean', 'paint', 'quiet', 'river', 'sugar', 'train'],
-   ['animal', 'beauty', 'circle', 'desire', 'escape', 'friend', 'garden', 'helmet', 'island', 'jungle', 'kindly', 'little', 'moment', 'nature', 'online', 'person', 'rocket', 'single', 'travel', 'window'],
-   ['already', 'balance', 'capital', 'feature', 'grammar', 'freedom', 'general', 'history', 'imagine', 'journey', 'kitchen', 'library', 'measure', 'natural', 'opinion', 'prepare', 'quality', 'respect', 'support', 'trouble'],
-   ['accurate', 'behavior', 'birthday', 'category', 'decision', 'elephant', 'feedback', 'hospital', 'internet', 'location', 'material', 'notebook', 'opposite', 'possible', 'question', 'recovery', 'tomorrow', 'universe', 'vertical', 'wildlife'],
-   ['attention', 'brilliant', 'confusion', 'education', 'expansion', 'generator', 'happiness', 'languages', 'marketing', 'notorious', 'operation', 'potential', 'reception', 'selection', 'technical', 'universal', 'workforce', 'telephone', 'universal'],
-   ['accomplish', 'deliberate', 'endangered', 'foundation', 'generation', 'helicopter', 'impossible', 'journalism', 'literature', 'motivation', 'playground', 'revolution', 'surprising', 'blackberry', 'developing', 'expedition', 'television', 'uplifting', 'prosperous', 'management']];
+var
+  n, a: integer;
+  lang: string;
 
 
-const otstup='     ';
+const Paragraph='     ';
 
+// процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
 var
   Handle: THandle;
@@ -53,137 +41,160 @@ begin
       // Move the cursor to the top left
       SetConsoleCursorPosition(Handle, TopLeft);
     end;
-
-
   end;
-
-
   {$ENDIF}
 end;
 
 
-procedure new_round(var round_num :integer);
+// процедура NewRound - Обновление раунда
+// number_of_round - Номер текущего раунда
+procedure NewRound(var number_of_round: integer);
 begin
-  inc(round_num);
+  inc(number_of_round);
   ClearConsole;
-  writeln(otstup,'Раунд ', round_num);
+  writeln(Paragraph,'Раунд ', number_of_round);
   writeln;
 end;
 
-procedure f1(const Dic: Dc; var str: string; k: integer);
+
+function GetWordFromFile(FileName: string; Number: integer): String;
+  var
+    WordFile: TextFile;
+    s: String;
+    arr: TArray<String>;
+  begin
+    AssignFile(WordFile, FileName);
+    Reset(WordFile);
+    ReadLn(WordFile, s);
+    Randomize;
+    arr := s.Split([' ']);
+    CloseFile(WordFile);
+    Result := arr[random(Length(arr))];
+  end;
+
+procedure f1(var str: string; k: integer);
 var
-  l: integer;
-  word: string;
+  l, f: integer;
+  word, lang: string;
 begin
+  Str:= '';
   Randomize;
-  while length(Str) < k do
+  lang := 'Rus';
+  f := Random(2);
+  while length(str) < k do
   begin
     if k >= 9 then
-      l := Random(9)
+      l := Random(10) + 1
     else
-      l := Random(k);
-    word:= Dic[l][Random(length(Dic[l]))];
-    if Random(5)  = 0 then
-      Word[1] := chr(Ord(Word[1]) - 32);
+      l := Random(k) + 1;
+    word := GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(l) +'.txt', n);{Dic[f][l][Random(length(Dic[f][l]))]}
+    if Random(5) = 0 then
+      word[1] := chr(Ord(word[1]) - 32);
 
-    if ((k - length(Str) - l) <= 6) and ((k - length(Str) - (l + 1)) >= 2) then
+    if ((k - length(str) - (l + 1)) <= 6) and ((k - length(str) - (l + 1)) >= 2) then
     begin
-       Str:= Str + word + ' ';
-       Str:= Str + Dic[k - length(Str)-1][Random(length(Dic[k - length(Str)-1]))];
+      str := str + word + ' ';
+      str := str + GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(k - length(str)) +'.txt', n){Dic[f][k - length(str) - 1][Random(length(Dic[f][k - length(str) - 1]))]};
     end
-    else if (k - length(str) - (l + 1)) = 0 then
+    else if (k - length(str) - l) = 0 then
       str := str + word
-    else if (k - length(Str) - (l + 1)) > 6 then
-       Str:= Str + word + ' ';
+    else if (k - length(str) - (l + 1)) > 6 then
+      str := str + word + ' ';
   end;
 end;
 
-function zamena(const dic:dc; l:integer):string;
+{function zamena(l:integer):string;
 begin
   Randomize;
   var i:=Random(length(dic[l-1]));
   Result:=dic[l-1][i];
-end;
+end;}
 
-function inputt(l:integer):string;
-var s:string;
+// функция UpdateInput - Функция возвращающая введённую строку измененную под нужную длину
+//  length_of_string - Длина исходной строки
+function UpdateInput (length_of_string: integer): string;
+var user_string: string; //  user_string - Строка пользователя
 begin
-  readln(s);
-  Result:=s;
-  if (Result<>'13') then
-  if (length(s)<l) then
+  readln(user_string);
+  Result := user_string;
+  if (Result <> '13') then
+  if (length(user_string) < length_of_string) then
   begin
-    for var i := length(s)+1 to l do
-      Result:=Result+'0';
+    for var i := length(user_string) + 1 to length_of_string do
+      Result := Result + '0';
   end
   else
   begin
-    delete(Result,l+1,length(s)-l);
+    delete(Result,length_of_string+1,length(user_string)-length_of_string);
   end;
 end;
 
 
-function spaces(s:string; s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer):string;
+//ControlSpaces - Функция, которая возвращает измененный пробельный кусок в соответствии с вводом пользователя
+//  part_of_s - пробельный кусок строки которую надо ввести
+//  part_of_user_string - кусок который ввел пользователь как соответствующий пробельный кусок
+//  coef - Коеффициент
+function ControlSpaces(part_of_s:string; part_of_user_string:string; coef:integer):string;
+var
+  i, j:integer;
+  matching_spaces: boolean; //станет истиной если хотя бы один пробел совпадает
 begin
-  result:='';
-  for var i := 1 to length(s) do
+  matching_spaces := false;
+  Result := '';
+  for i := 1 to length(part_of_s) do
   begin
-    if (s[i]=s0[i]) then
+    if (part_of_s[i]=part_of_user_string[i]) then
     begin
-      inc(sovp_spaces);
+      matching_spaces := true;
     end
     else
     begin
-      inc(nesovp_spaces);
-      for var j := 1 to koef do
-        Result:=Result+' ';
+      for j := 1 to coef do
+        Result := Result + ' ';
     end;
   end;
-  if (sovp_spaces<>0) then Result:=Result+' ';
-  chisl:=chisl+max(0,length(s)-length(result));
+  if (matching_spaces) then Result:=Result+' ';
 end;
 
-procedure deleting_spaces(var s:string; var s0:string; var sovp_spaces:integer; var nesovp_spaces:integer; var chisl:integer; koef:integer);
+// процедура DeleteSpaces - Обработать всю строку на пробелы
+//  s - Строка, которую надо ввести пользователю
+//  user_string - Строка, которую ввёл пользователь
+procedure DeleteSpaces(var s:string; var user_string:string; coef:integer);
+var
+  i, j: integer;
+  modified_spaces:string; //измененные в строках пробелы
 begin
-  var i,sovp_spaces1,nesovp_spaces1:integer;
-  i:=1;
-
-  while i<length(s) do
+  i := 1;
+  while i < length(s) do
   begin
-    sovp_spaces1:=0; nesovp_spaces1:=0;
-    if (s[i]=' ') then
+    if (s[i] = ' ') then
     begin
-      var j:integer;
-      j:=i+1;
-      while (s[j]=' ') do
+      j := i+1;
+      while (s[j] = ' ') do
         inc(j);
-      var s1,s2,s3:string;
-      s1:=copy(s,i,j-i);
-      s2:=copy(s0,i,j-i);
-      s3:=spaces(s1,s2,sovp_spaces1,nesovp_spaces1,chisl,koef);
-      inc(sovp_spaces,sovp_spaces1);
-      inc(nesovp_spaces,nesovp_spaces1);
+      modified_spaces := ControlSpaces(copy(s,i,j-i), copy(user_string,i,j-i), coef);
       delete(s,i,j-i);
-      delete(s0,i,j-i);
-      insert(s3,s,i);
-      insert(s3,s0,i);
-      inc(i,length(s3)-1);
+      delete(user_string,i,j-i);
+      insert(modified_spaces,s,i);
+      insert(modified_spaces,user_string,i);
+      inc(i,length(modified_spaces)-1);
     end;
     inc(i);
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; dicti : dc; var l : integer):string;
+function f22(s:string; koef:integer;var  flag:boolean; var l : integer):string;
 var
-  s0,word:string;
+  s0,word, lang:string;
   i,j,p:integer;
 begin
   //readln(s0);
+  lang:= 'Rus';
   var sovp_spaces:integer;
   var nesovp_spaces:integer;
   sovp_spaces:=0;
   nesovp_spaces:=0;
-  s0:=inputt(length(s));
+  s0:=UpdateInput(length(s));
   p:=length(s);
   Result:='';
   if (s0<>s) then
@@ -193,7 +204,7 @@ begin
       i:=1;
       var chisl:integer;
       chisl:=0;
-      deleting_spaces(s, s0, sovp_spaces,nesovp_spaces,chisl, koef);
+      DeleteSpaces(s, s0, koef);
       while (length(s)<>0) do
       begin
         if (s[1]=' ') then
@@ -225,18 +236,18 @@ begin
             var t:string;
             if (length(word)>10) then
             begin
-              f1(dicti,t,length(word));
+              f1(t,length(word));
               while (t=word) do
               begin
-                f1(dicti,t,length(word));
+                f1(t,length(word));
               end;
             end
             else
             begin
-              t:=zamena(dicti,length(word));
+              t:=GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(length(word)) +'.txt', n){zamena(dicti,length(word))};
               while (t=word) do
               begin
-                t:=zamena(dicti,length(word));
+                t:=GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(length(word)) +'.txt', n){zamena(length(word))};
               end;
               if (Random(5)=0) then
                 Word[1] := chr(Ord(Word[1]) - 32);
@@ -271,28 +282,30 @@ begin
       end;
     end
     else flag:=false;
-    l:=max(p,length(Result));
+    l:=length(Result);
   end;
 end;
 
 
 begin
+  setconsolecp(65001);
+  SetConsoleOutputCP(65001);
   var s,k :string;
   var flag:boolean;
   var koef,num_round,l:integer;
   l:=20;
-  write(otstup,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
+  write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
   readln;
   num_round:=0;
-  new_round(num_round);
+  NewRound(num_round);
   koef:=num_round*2;
   flag:=true;
-  f1(dicti,s,l);
-  writeln(otstup,s);
+  f1(s,l);
+  writeln(Paragraph,s);
   while flag do
   begin
-    write(otstup);
-    s:=f22(s,num_round*2,flag,dicti,l);
+    write(Paragraph);
+    s:=f22(s,num_round*2,flag,l);
     writeln;
     if flag then
     if (s='') then
@@ -301,32 +314,32 @@ begin
       l:=max(0,l);
       if l=0 then
       begin
-        new_round(num_round);
+        NewRound(num_round);
         l:=20;
       end;
-      f1(dicti,s,l);
-      writeln (otstup,s);
+      f1(s,l);
+      writeln (Paragraph,s);
     end
     else
     begin
       if (length(s)<156) then
       begin
-       writeln(otstup,S);
+       writeln(Paragraph,S);
       end
       else
       begin
         dec(num_round);
-        write(otstup,'Попробуйте заново. Нажмите любую кнопку для продолжения');
+        write(Paragraph,'Попробуйте заново. Нажмите любую кнопку для продолжения');
         readln;
-        new_round(num_round);
+        NewRound(num_round);
         l:=20;
         s:='';
-        f1(dicti,s,l);
-        writeln(otstup,s);
+        f1(s,l);
+        writeln(Paragraph,s);
       end;
     end;
   end;
-  writeln(otstup,'Игра закончена');
+  writeln(Paragraph,'Игра закончена');
   var sovp_spaces:integer; var nesovp_spaces:integer;
   {readln(s);
   readln(k);
@@ -341,4 +354,3 @@ end.
 //длина строки консоли - 156
 {ghgh       ghgj   jf g g
 ghgh d d d ghgj d jf gdg}
-
