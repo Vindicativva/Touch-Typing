@@ -92,12 +92,12 @@ begin
     if Random(5) = 0 then
       word[1] := chr(Ord(word[1]) - 32);
 
-    if ((k - length(str) - l) <= 6) and ((k - length(str) - (l + 1)) >= 2) then
+    if ((k - length(str) - (l + 1)) <= 6) and ((k - length(str) - (l + 1)) >= 2) then
     begin
       str := str + word + ' ';
       str := str + GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(k - length(str)) +'.txt', n){Dic[f][k - length(str) - 1][Random(length(Dic[f][k - length(str) - 1]))]};
     end
-    else if (k - length(str) - (l)) = 0 then
+    else if (k - length(str) - l) = 0 then
       str := str + word
     else if (k - length(str) - (l + 1)) > 6 then
       str := str + word + ' ';
