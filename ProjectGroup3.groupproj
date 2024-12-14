@@ -1,0 +1,39 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{F08FC746-CBE7-4A58-85B8-B7A64BBD26B6}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Typing.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\..\проект\Typing.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Typing">
+        <MSBuild Projects="..\..\..\..\..\проект\Typing.dproj"/>
+    </Target>
+    <Target Name="Typing:Clean">
+        <MSBuild Projects="..\..\..\..\..\проект\Typing.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Typing:Make">
+        <MSBuild Projects="..\..\..\..\..\проект\Typing.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Typing;Typing"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Typing:Clean;Typing:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Typing:Make;Typing:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

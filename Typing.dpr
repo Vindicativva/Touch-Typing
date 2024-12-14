@@ -284,6 +284,8 @@ end;
 
 
 begin
+  setconsolecp(65001);
+  SetConsoleOutputCP(65001);
   var s,k :string;
   var flag:boolean;
   var koef,num_round,l:integer;
