@@ -5,6 +5,7 @@ uses
   Windows,
   System.SysUtils,
   Math;
+<<<<<<< Updated upstream
 
 {$ENDIF}
 
@@ -31,13 +32,42 @@ f1 -
 
 
 *)
+=======
+>>>>>>> Stashed changes
 
-var
-  n, a: integer;
-  lang: string;
+{$ENDIF}
+
+(*
+FunctionFunction - Функция
+variable_variable - Переменная
+
+Variables
+paragraph - Отступ с левой стороны консоли
+number_of_round - Номер раунда
+
+Functions
+GetWordFromFile - Функция, которая возвращает слово, требуемой длины
+ReplaceWord - Функция замены слова на другое слово такой жк длины
+  length_of_word - Длина заменяемого слова
 
 const Paragraph = '     '; //отступ перед выводом на экран
 
+<<<<<<< Updated upstream
+=======
+Main - Обработка главных функций программы
+
+Procedures
+
+
+f1 -
+
+
+*)
+const Eng = 'Eng';
+const Rus = 'Rus';
+const Paragraph = '     '; //отступ перед выводом на экран
+
+>>>>>>> Stashed changes
 // процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
 var
@@ -70,6 +100,7 @@ begin
   {$ENDIF}
 end;
 
+<<<<<<< Updated upstream
 // процедура NewRound - Обновление раунда
 // number_of_round - Номер текущего раунда
 procedure NewRound(var number_of_round: integer);
@@ -77,6 +108,165 @@ begin
   inc(number_of_round);
   ClearConsole;
   writeln(Paragraph,'Раунд ', number_of_round);
+=======
+procedure OutputPamPamPam(const paragraph: string; s: string; d: integer; d1: integer; d2: integer; k: integer);
+var
+  i:integer;
+begin
+  write(Paragraph);
+  for i := 1 to length(s) do
+  begin
+    case s[i] of
+      '!','.','?':
+      begin
+        write(s[i]);
+        sleep(d1);
+      end;
+      ',':
+      begin
+        write(s[i]);
+        sleep(d2);
+      end
+      else
+      begin
+        write(s[i]);
+        sleep(d);
+      end;
+    end;
+    if (i mod k = 0) and (i <> length(s)) then
+    begin
+      writeln;
+      write(Paragraph);
+    end;
+  end;
+end;
+
+function Rules(const Paragraph: string): byte;
+var a:byte;
+begin
+  try
+    readln(a);
+    if (a<>0) and (a<>1) then a := a div (a-a);
+  except
+    writeln;
+    OutputPamPamPam(paragraph,'Некорректный ввод. Повторите попытку ввода: ', 50, 50, 50, 100);
+    a := Rules(Paragraph);
+  end;
+  Result:=a;
+end;
+
+procedure Begining(const Paragraph: string; var lang: string);
+var
+  cursor: TCoord;
+  r: cardinal;
+const d = 100;
+const d1 = 500;
+const d2 = 200;
+const k = 100;
+begin
+  cursor.x:=0;
+  cursor.y:=3;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  OutputPamPamPam(Paragraph, 'Просим перед началом включить полноэкранный режим', 30, 500, 200, 100);
+  sleep(100);
+  cursor.y:=5;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  sleep(100);
+  OutputPamPamPam(Paragraph, 'Загрузка', 0, 500, 200, 100);
+  sleep(30);
+  OutputPamPamPam('', '...', 30, 500, 200, 100);
+  cursor.x:=13;
+  cursor.y:=5;
+  FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', 3, cursor, r);
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  sleep(30);
+  OutputPamPamPam('', '...', 30, 500, 200, 100);
+  FillConsoleOutputCharacter(GetStdHandle(STD_OUTPUT_HANDLE), ' ', 3, cursor, r);
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  sleep(30);
+  OutputPamPamPam('', '...', 30, 500, 200, 100);
+  ClearConsole;
+  cursor.x:=0;
+  cursor.y:=4;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "Придумать название".', d, 500, 300, 100);
+  inc(cursor.y,2);
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', d, 500, 200, 100);
+  if (Rules(Paragraph) = 1) then
+  begin
+    ClearConsole;
+    cursor.x:=0;
+    cursor.y:=1;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, 'Правила тренажера:', 70, 200, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '1.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'Если правильно ввести строку, то новая строка уменьшиться на 2', 70, 500, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '2.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'Уровень заканчивается, когда новая строка становится нулевой', 70, 500, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '3.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'Каждый уровень сложнее предыдущего. Каждый неправильно введенный символ увеличивается в 2*(номер раунда) раз', 70, 150, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '4.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'В случае частично верного написания строки каждое правильно введенное слово заменяется', 70, 150, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '5.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'Если из-за ошибок строка станет слишком длинной, то уровень придется начать с начала', 70, 150, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    OutputPamPamPam(Paragraph, '6.', 100, 500, 200, 100);
+    writeln;
+    OutputPamPamPam(Paragraph + '  ', 'Введите ''13'', чтобы закончить тренировку', 70, 150, 150, 130);
+    inc(cursor.y,2);
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+    writeln;
+    OutputPamPamPam(Paragraph, 'Нажмите enter, чтобы продолжить', 50, 500, 100, 100);
+    readln;
+  end;
+  ClearConsole;
+  cursor.y:=3;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  OutputPamPamPam(Paragraph, 'Вам нужно выбрать язык для тренировки.', 50, 500, 100, 100);
+  inc(cursor.y,2);
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
+  OutputPamPamPam(Paragraph, 'Введите 1, если хотите начать тренировку на английском. Введите 0, если на русском: ', 80, 250, 100, 130);
+  if (Rules(Paragraph) = 1) then lang:='Eng'
+  else lang:='Rus';
+end;
+
+var
+  n, a: integer;
+  lang: string;
+  language:string;
+
+
+
+
+
+// процедура NewRound - Обновление раунда
+// number_of_round - Номер текущего раунда
+procedure NewRound(var number_of_round: integer);
+begin
+  inc(number_of_round);
+  ClearConsole;
+  writeln;
+  OutputPamPamPam(Paragraph,'Раунд ', 100, 0, 0, 100);
+  write(number_of_round);
+  writeln;
+>>>>>>> Stashed changes
   writeln;
 end;
 
@@ -96,10 +286,10 @@ function GetWordFromFile(FileName: string; Number: integer): String;
     Result := arr[random(Length(arr))];
   end;
 
-procedure f1(var str: string; k: integer);
+procedure f1(var str: string; k: integer; lang: string);
 var
   l, f: integer;
-  word, lang: string;
+  word: string;
 begin
   Str:= '';
   Randomize;
@@ -211,13 +401,20 @@ end;
 // coef - коэффициент
 // flag - становится ложью, когда пользователь предпочет завершить игру
 // l - длина строки для генерации в случае полностью корректного ввода
+<<<<<<< Updated upstream
 function Main(s:string; coef: integer; var  flag: boolean; var l: integer): string;
+=======
+function Main(s:string; coef: integer; var  flag: boolean; var l: integer; lang: string): string;
+>>>>>>> Stashed changes
 var
-  s0,word, lang:string;
+  s0,word:string;
   i,j,p:integer;
 begin
   //readln(s0);
+<<<<<<< Updated upstream
   lang:= 'Rus';
+=======
+>>>>>>> Stashed changes
   s0:=UpdateInput(length(s));
   p:=length(s);
   Result:='';
@@ -260,10 +457,10 @@ begin
             var t:string;
             if (length(word)>10) then
             begin
-              f1(t,length(word));
+              f1(t,length(word), lang);
               while (t=word) do
               begin
-                f1(t,length(word));
+                f1(t,length(word), lang);
               end;
             end
             else
@@ -311,6 +508,8 @@ begin
 end;
 
 
+
+
 begin
   setconsolecp(1251);
   SetConsoleOutputCP(1251);
@@ -318,18 +517,33 @@ begin
   var flag:boolean;
   var coef,number_of_round,l:integer;
   l:=20;
+<<<<<<< Updated upstream
   write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
   readln;
+=======
+  Begining(Paragraph, lang);
+  //lang:='Rus';
+>>>>>>> Stashed changes
   number_of_round:=0;
   NewRound(number_of_round);
   coef:=number_of_round*2;
   flag:=true;
+<<<<<<< Updated upstream
   f1(s,l);
   writeln(Paragraph,s);
   while flag do
   begin
     write(Paragraph);
     s:=Main(s,number_of_round*2,flag,l);
+=======
+  f1(s,l, lang);
+  OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
+  writeln;
+  while flag do
+  begin
+    write(Paragraph);
+    s:=Main(s,number_of_round*2,flag,l, lang);
+>>>>>>> Stashed changes
     writeln;
     if flag then
     if (s='') then
@@ -341,23 +555,39 @@ begin
         NewRound(number_of_round);
         l:=20;
       end;
+<<<<<<< Updated upstream
       f1(s,l);
       writeln (Paragraph,s);
+=======
+      f1(s,l, lang);
+      OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
+      writeln;
+>>>>>>> Stashed changes
     end
     else
     begin
       if (length(s)<156) then
       begin
+<<<<<<< Updated upstream
        writeln(Paragraph,S);
+=======
+        OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
+        writeln;
+>>>>>>> Stashed changes
       end
       else
       begin
         dec(number_of_round);
+<<<<<<< Updated upstream
         write(Paragraph,'Попробуйте заново. Нажмите любую кнопку для продолжения');
+=======
+        OutputPamPamPam(Paragraph,'Вы допустили слишком много ошибок. Нажмите enter для продолжения',50, 100, 0, 1000);
+>>>>>>> Stashed changes
         readln;
         NewRound(number_of_round);
         l:=20;
         s:='';
+<<<<<<< Updated upstream
         f1(s,l);
         writeln(Paragraph,s);
       end;
@@ -373,6 +603,15 @@ begin
   writeln(s);
   writeln(chisl);}
   //writeln('+',spaces(s,k,sovp_spaces,nesovp_spaces,2),'+ ',' ',sovp_spaces,' ',nesovp_spaces,' ',length(spaces(s,k,sovp_spaces,nesovp_spaces,2)));
+=======
+        f1(s,l, lang);
+        OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
+        writeln;
+      end;
+    end;
+  end;
+  OutputPamPamPam(Paragraph,'Тренировка закончена',70,0,0,100);
+>>>>>>> Stashed changes
   readln;
 end.
 //длина строки консоли - 156
