@@ -5,35 +5,6 @@ uses
   Windows,
   System.SysUtils,
   Math;
-<<<<<<< Updated upstream
-
-{$ENDIF}
-
-(*
-FunctionFunction - Функция
-variable_variable - Переменная
-
-Variables
-paragraph - Отступ с левой стороны консоли
-number_of_round - Номер раунда
-
-Functions
-GetWordFromFile - Функция, которая возвращает слово, требуемой длины
-ReplaceWord - Функция замены слова на другое слово такой жк длины
-  length_of_word - Длина заменяемого слова
-
-
-Main - Обработка главных функций программы
-
-Procedures
-
-
-f1 -
-
-
-*)
-=======
->>>>>>> Stashed changes
 
 {$ENDIF}
 
@@ -52,8 +23,6 @@ ReplaceWord - Функция замены слова на другое слов�
 
 const Paragraph = '     '; //отступ перед выводом на экран
 
-<<<<<<< Updated upstream
-=======
 Main - Обработка главных функций программы
 
 Procedures
@@ -67,7 +36,6 @@ const Eng = 'Eng';
 const Rus = 'Rus';
 const Paragraph = '     '; //отступ перед выводом на экран
 
->>>>>>> Stashed changes
 // процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
 var
@@ -100,15 +68,6 @@ begin
   {$ENDIF}
 end;
 
-<<<<<<< Updated upstream
-// процедура NewRound - Обновление раунда
-// number_of_round - Номер текущего раунда
-procedure NewRound(var number_of_round: integer);
-begin
-  inc(number_of_round);
-  ClearConsole;
-  writeln(Paragraph,'Раунд ', number_of_round);
-=======
 procedure OutputPamPamPam(const paragraph: string; s: string; d: integer; d1: integer; d2: integer; k: integer);
 var
   i:integer;
@@ -266,7 +225,6 @@ begin
   OutputPamPamPam(Paragraph,'Раунд ', 100, 0, 0, 100);
   write(number_of_round);
   writeln;
->>>>>>> Stashed changes
   writeln;
 end;
 
@@ -401,20 +359,12 @@ end;
 // coef - коэффициент
 // flag - становится ложью, когда пользователь предпочет завершить игру
 // l - длина строки для генерации в случае полностью корректного ввода
-<<<<<<< Updated upstream
-function Main(s:string; coef: integer; var  flag: boolean; var l: integer): string;
-=======
 function Main(s:string; coef: integer; var  flag: boolean; var l: integer; lang: string): string;
->>>>>>> Stashed changes
 var
   s0,word:string;
   i,j,p:integer;
 begin
   //readln(s0);
-<<<<<<< Updated upstream
-  lang:= 'Rus';
-=======
->>>>>>> Stashed changes
   s0:=UpdateInput(length(s));
   p:=length(s);
   Result:='';
@@ -517,25 +467,12 @@ begin
   var flag:boolean;
   var coef,number_of_round,l:integer;
   l:=20;
-<<<<<<< Updated upstream
-  write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
-  readln;
-=======
   Begining(Paragraph, lang);
   //lang:='Rus';
->>>>>>> Stashed changes
   number_of_round:=0;
   NewRound(number_of_round);
   coef:=number_of_round*2;
   flag:=true;
-<<<<<<< Updated upstream
-  f1(s,l);
-  writeln(Paragraph,s);
-  while flag do
-  begin
-    write(Paragraph);
-    s:=Main(s,number_of_round*2,flag,l);
-=======
   f1(s,l, lang);
   OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
   writeln;
@@ -543,7 +480,6 @@ begin
   begin
     write(Paragraph);
     s:=Main(s,number_of_round*2,flag,l, lang);
->>>>>>> Stashed changes
     writeln;
     if flag then
     if (s='') then
@@ -555,55 +491,25 @@ begin
         NewRound(number_of_round);
         l:=20;
       end;
-<<<<<<< Updated upstream
-      f1(s,l);
-      writeln (Paragraph,s);
-=======
       f1(s,l, lang);
       OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
       writeln;
->>>>>>> Stashed changes
     end
     else
     begin
       if (length(s)<156) then
       begin
-<<<<<<< Updated upstream
-       writeln(Paragraph,S);
-=======
         OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
         writeln;
->>>>>>> Stashed changes
       end
       else
       begin
         dec(number_of_round);
-<<<<<<< Updated upstream
-        write(Paragraph,'Попробуйте заново. Нажмите любую кнопку для продолжения');
-=======
         OutputPamPamPam(Paragraph,'Вы допустили слишком много ошибок. Нажмите enter для продолжения',50, 100, 0, 1000);
->>>>>>> Stashed changes
         readln;
         NewRound(number_of_round);
         l:=20;
         s:='';
-<<<<<<< Updated upstream
-        f1(s,l);
-        writeln(Paragraph,s);
-      end;
-    end;
-  end;
-  writeln(Paragraph,'Игра закончена');
-  var sovp_spaces:integer; var nesovp_spaces:integer;
-  {readln(s);
-  readln(k);
-  var chisl:integer;
-  chisl:=0;
-  deleting_spaces(s,k,coef,number_of_round,chisl,2);
-  writeln(s);
-  writeln(chisl);}
-  //writeln('+',spaces(s,k,sovp_spaces,nesovp_spaces,2),'+ ',' ',sovp_spaces,' ',nesovp_spaces,' ',length(spaces(s,k,sovp_spaces,nesovp_spaces,2)));
-=======
         f1(s,l, lang);
         OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
         writeln;
@@ -611,7 +517,6 @@ begin
     end;
   end;
   OutputPamPamPam(Paragraph,'Тренировка закончена',70,0,0,100);
->>>>>>> Stashed changes
   readln;
 end.
 //длина строки консоли - 156
