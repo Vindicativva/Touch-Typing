@@ -1,4 +1,4 @@
-program Typing;
+﻿program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
@@ -206,17 +206,18 @@ begin
   end;
 end;
 
-function f22(s:string; koef:integer;var  flag:boolean; var l : integer):string;
+//основная функция Main - вернет новую строку для ввода или пустую в случае полностью корректного ввода
+// s - строка, которую надо ввести пользователю
+// coef - коэффициент
+// flag - становится ложью, когда пользователь предпочет завершить игру
+// l - длина строки для генерации в случае полностью корректного ввода
+function Main(s:string; coef: integer; var  flag: boolean; var l: integer): string;
 var
   s0,word, lang:string;
   i,j,p:integer;
 begin
   //readln(s0);
   lang:= 'Rus';
-  var sovp_spaces:integer;
-  var nesovp_spaces:integer;
-  sovp_spaces:=0;
-  nesovp_spaces:=0;
   s0:=UpdateInput(length(s));
   p:=length(s);
   Result:='';
@@ -227,7 +228,7 @@ begin
       i:=1;
       var chisl:integer;
       chisl:=0;
-      DeleteSpaces(s, s0, koef);
+      DeleteSpaces(s, s0, coef);
       while (length(s)<>0) do
       begin
         if (s[1]=' ') then
@@ -311,24 +312,24 @@ end;
 
 
 begin
-  setconsolecp(65001);
-  SetConsoleOutputCP(65001);
+  setconsolecp(1251);
+  SetConsoleOutputCP(1251);
   var s,k :string;
   var flag:boolean;
   var coef,number_of_round,l:integer;
   l:=20;
   write(Paragraph,'Вас приветсвует тренажер слепой печати. Нажмите любую кнопку для продолжения');
   readln;
-  num_round:=0;
-  NewRound(num_round);
-  koef:=num_round*2;
+  number_of_round:=0;
+  NewRound(number_of_round);
+  coef:=number_of_round*2;
   flag:=true;
   f1(s,l);
   writeln(Paragraph,s);
   while flag do
   begin
     write(Paragraph);
-    s:=f22(s,num_round*2,flag,l);
+    s:=Main(s,number_of_round*2,flag,l);
     writeln;
     if flag then
     if (s='') then
@@ -337,7 +338,7 @@ begin
       l:=max(0,l);
       if l=0 then
       begin
-        NewRound(num_round);
+        NewRound(number_of_round);
         l:=20;
       end;
       f1(s,l);
@@ -351,10 +352,10 @@ begin
       end
       else
       begin
-        dec(num_round);
+        dec(number_of_round);
         write(Paragraph,'Попробуйте заново. Нажмите любую кнопку для продолжения');
         readln;
-        NewRound(num_round);
+        NewRound(number_of_round);
         l:=20;
         s:='';
         f1(s,l);
@@ -368,7 +369,7 @@ begin
   readln(k);
   var chisl:integer;
   chisl:=0;
-  deleting_spaces(s,k,koef,num_round,chisl,2);
+  deleting_spaces(s,k,coef,number_of_round,chisl,2);
   writeln(s);
   writeln(chisl);}
   //writeln('+',spaces(s,k,sovp_spaces,nesovp_spaces,2),'+ ',' ',sovp_spaces,' ',nesovp_spaces,' ',length(spaces(s,k,sovp_spaces,nesovp_spaces,2)));
