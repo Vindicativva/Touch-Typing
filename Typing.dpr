@@ -8,32 +8,6 @@ uses
 
 {$ENDIF}
 
-(*
-FunctionFunction - Функция
-variable_variable - Переменная
-
-Variables
-paragraph - Отступ с левой стороны консоли
-number_of_round - Номер раунда
-
-Functions
-GetWordFromFile - Функция, которая возвращает слово, требуемой длины
-ReplaceWord - Функция замены слова на другое слово такой жк длины
-  length_of_word - Длина заменяемого слова
-
-const Paragraph = '     '; //отступ перед выводом на экран
-
-Main - Обработка главных функций программы
-
-Procedures
-
-
-f1 -
-
-
-*)
-const Eng = 'Eng';
-const Rus = 'Rus';
 const Paragraph = '     '; //отступ перед выводом на экран
 
 // процедура ClearConsole - Очистка консоли
@@ -68,31 +42,38 @@ begin
   {$ENDIF}
 end;
 
-procedure OutputPamPamPam(const paragraph: string; s: string; d: integer; d1: integer; d2: integer; k: integer);
+// процедура OutputPamPamPam - позволяет выводить строку с задержкой
+// string_to_output - строка для вывода
+// delay_after_usual_letter - задержка после обычного сивола
+// delay_after_special_symbol - задержка после символа конца предложения 
+// delay_after_comma - задержка после запятой
+// max_length_of_string - количество после которого вывод начнется с новой строки
+procedure OutputPamPamPam(const paragraph: string; string_to_output: string; delay_after_usual_letter: integer; 
+delay_after_special_symbol: integer; delay_after_comma: integer; max_length_of_string: integer);
 var
   i:integer;
 begin
   write(Paragraph);
-  for i := 1 to length(s) do
+  for i := 1 to length(string_to_output) do
   begin
-    case s[i] of
+    case string_to_output[i] of
       '!','.','?':
       begin
-        write(s[i]);
-        sleep(d1);
+        write(string_to_output[i]);
+        sleep(delay_after_special_symbol);
       end;
       ',':
       begin
-        write(s[i]);
-        sleep(d2);
+        write(string_to_output[i]);
+        sleep(delay_after_comma);
       end
       else
       begin
-        write(s[i]);
-        sleep(d);
+        write(string_to_output[i]);
+        sleep(delay_after_usual_letter);
       end;
     end;
-    if (i mod k = 0) and (i <> length(s)) then
+    if (i mod max_length_of_string = 0) and (i <> length(string_to_output)) then
     begin
       writeln;
       write(Paragraph);
@@ -100,28 +81,27 @@ begin
   end;
 end;
 
+// функция Rules - предназначена для двоичного выбора, позволяет ввести только 1 и 0, возвращает соответвенно 
 function Rules(const Paragraph: string): byte;
-var a:byte;
+var decision_of_user: byte; // переменная решения пользователя
 begin
   try
-    readln(a);
-    if (a<>0) and (a<>1) then a := a div (a-a);
+    readln(decision_of_user);
+    if (decision_of_user <> 0) and (decision_of_user <> 1) then decision_of_user := decision_of_user div (decision_of_user-decision_of_user);
   except
     writeln;
     OutputPamPamPam(paragraph,'Некорректный ввод. Повторите попытку ввода: ', 50, 50, 50, 100);
-    a := Rules(Paragraph);
+    decision_of_user := Rules(Paragraph);
   end;
-  Result:=a;
+  Result := decision_of_user;
 end;
 
-procedure Begining(const Paragraph: string; var lang: string);
+// процедура Begining - процедура выводящая начальный текст
+// language - переменная в которой хранится язык тренировки
+procedure Begining(const Paragraph: string; var language: string);
 var
   cursor: TCoord;
   r: cardinal;
-const d = 100;
-const d1 = 500;
-const d2 = 200;
-const k = 100;
 begin
   cursor.x:=0;
   cursor.y:=3;
@@ -148,10 +128,10 @@ begin
   cursor.x:=0;
   cursor.y:=4;
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-  OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "Придумать название".', d, 500, 300, 100);
+  OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "Придумать название".', 70, 500, 300, 100);
   inc(cursor.y,2);
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-  OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', d, 500, 200, 100);
+  OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', 70, 500, 200, 100);
   if (Rules(Paragraph) = 1) then
   begin
     ClearConsole;
@@ -163,32 +143,32 @@ begin
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '1.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Если правильно ввести строку, то новая строка уменьшиться на 2', 70, 500, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Если правильно ввести строку, то новая строка уменьшиться на 2', 50, 500, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '2.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Уровень заканчивается, когда новая строка становится нулевой', 70, 500, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Уровень заканчивается, когда новая строка становится нулевой', 50, 500, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '3.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Каждый уровень сложнее предыдущего. Каждый неправильно введенный символ увеличивается в 2*(номер раунда) раз', 70, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Каждый уровень сложнее предыдущего. Каждый неправильно введенный символ увеличивается в 2*(номер раунда) раз', 50, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '4.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'В случае частично верного написания строки каждое правильно введенное слово заменяется', 70, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'В случае частично верного написания строки каждое правильно введенное слово заменяется', 50, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '5.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Если из-за ошибок строка станет слишком длинной, то уровень придется начать с начала', 70, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Если из-за ошибок строка станет слишком длинной, то уровень придется начать с начала', 50, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '6.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Введите ''13'', чтобы закончить тренировку', 70, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Введите ''13'', чтобы закончить тренировку', 50, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     writeln;
@@ -202,18 +182,9 @@ begin
   inc(cursor.y,2);
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
   OutputPamPamPam(Paragraph, 'Введите 1, если хотите начать тренировку на английском. Введите 0, если на русском: ', 80, 250, 100, 130);
-  if (Rules(Paragraph) = 1) then lang:='Eng'
-  else lang:='Rus';
+  if (Rules(Paragraph) = 1) then language:='Eng'
+  else language:='Rus';
 end;
-
-var
-  n, a: integer;
-  lang: string;
-  language:string;
-
-
-
-
 
 // процедура NewRound - Обновление раунда
 // number_of_round - Номер текущего раунда
@@ -228,7 +199,9 @@ begin
   writeln;
 end;
 
-
+// функция GetWordFromFile - возвращает случайно выбранное слово заданной длины
+// FileName - имя файла, из которого будет браться слово
+// Number - удалить
 function GetWordFromFile(FileName: string; Number: integer): String;
   var
     WordFile: TextFile;
@@ -244,61 +217,42 @@ function GetWordFromFile(FileName: string; Number: integer): String;
     Result := arr[random(Length(arr))];
   end;
 
-procedure f1(var str: string; k: integer; lang: string);
+procedure f1(var str: string; k: integer; language: string);
 var
-  l, f: integer;
+  l: integer;
   word: string;
 begin
   Str:= '';
   Randomize;
-  lang := 'Rus';
-  f := Random(2);
+  //language := 'Rus';
   while length(str) < k do
   begin
-    if k >= 9 then
-      l := Random(10) + 1
-    else
-      l := Random(k) + 1;
-    word := GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(l) +'.txt', n);{Dic[f][l][Random(length(Dic[f][l]))]}
-    if Random(5) = 0 then
-      word[1] := chr(Ord(word[1]) - 32);
-
+    if k >= 9 then l := Random(10) + 1
+    else l := Random(k) + 1;
+    word := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(l) +'.txt', k);
+    if Random(5) = 0 then word[1] := chr(Ord(word[1]) - 32);
     if ((k - length(str) - (l + 1)) <= 6) and ((k - length(str) - (l + 1)) >= 2) then
     begin
       str := str + word + ' ';
-      str := str + GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(k - length(str)) +'.txt', n){Dic[f][k - length(str) - 1][Random(length(Dic[f][k - length(str) - 1]))]};
+      str := str + GetWordFromFile('..\..\' + language + '\' + language + IntToStr(k - length(str)) +'.txt', k){Dic[f][k - length(str) - 1][Random(length(Dic[f][k - length(str) - 1]))]};
     end
-    else if (k - length(str) - l) = 0 then
-      str := str + word
-    else if (k - length(str) - (l + 1)) > 6 then
-      str := str + word + ' ';
+    else if (k - length(str) - l) = 0 then str := str + word
+         else if (k - length(str) - (l + 1)) > 6 then str := str + word + ' ';
   end;
 end;
-
-{function zamena(l:integer):string;
-begin
-  Randomize;
-  var i:=Random(length(dic[l-1]));
-  Result:=dic[l-1][i];
-end;}
 
 // функция UpdateInput - Функция возвращающая введённую строку измененную под нужную длину
 //  length_of_string - Длина исходной строки
 function UpdateInput (length_of_string: integer): string;
-var user_string: string; //  user_string - Строка пользователя
+var 
+  user_string: string; //  user_string - Строка пользователя
+  i: integer;
 begin
   readln(user_string);
   Result := user_string;
   if (Result <> '13') then
-  if (length(user_string) < length_of_string) then
-  begin
-    for var i := length(user_string) + 1 to length_of_string do
-      Result := Result + '0';
-  end
-  else
-  begin
-    delete(Result,length_of_string+1,length(user_string)-length_of_string);
-  end;
+    if (length(user_string) < length_of_string) then for i := length(user_string) + 1 to length_of_string do Result := Result + '0'
+    else delete(Result,length_of_string+1,length(user_string)-length_of_string);
 end;
 
 //ControlSpaces - Функция, которая возвращает измененный пробельный кусок в соответствии с вводом пользователя
@@ -313,151 +267,89 @@ begin
   matching_spaces := false;
   Result := '';
   for i := 1 to length(part_of_s) do
-  begin
-    if (part_of_s[i]=part_of_user_string[i]) then
-    begin
-      matching_spaces := true;
-    end
-    else
-    begin
-      for j := 1 to coef do
-        Result := Result + ' ';
-    end;
-  end;
+    if (part_of_s[i]=part_of_user_string[i]) then matching_spaces := true
+    else for j := 1 to coef do Result := Result + ' ';
   if (matching_spaces) then Result:=Result+' ';
-end;
-
-// процедура DeleteSpaces - Обработать всю строку на пробелы
-//  s - Строка, которую надо ввести пользователю
-//  user_string - Строка, которую ввёл пользователь
-procedure DeleteSpaces(var s:string; var user_string:string; coef:integer);
-var
-  i, j: integer;
-  modified_spaces:string; //измененные в строках пробелы
-begin
-  i := 1;
-  while i < length(s) do
-  begin
-    if (s[i] = ' ') then
-    begin
-      j := i+1;
-      while (s[j] = ' ') do
-        inc(j);
-      modified_spaces := ControlSpaces(copy(s,i,j-i), copy(user_string,i,j-i), coef);
-      delete(s,i,j-i);
-      delete(user_string,i,j-i);
-      insert(modified_spaces,s,i);
-      insert(modified_spaces,user_string,i);
-      inc(i,length(modified_spaces)-1);
-    end;
-    inc(i);
-  end;
 end;
 
 //основная функция Main - вернет новую строку для ввода или пустую в случае полностью корректного ввода
 // s - строка, которую надо ввести пользователю
 // coef - коэффициент
 // flag - становится ложью, когда пользователь предпочет завершить игру
-// l - длина строки для генерации в случае полностью корректного ввода
-function Main(s:string; coef: integer; var  flag: boolean; var l: integer; lang: string): string;
-var
-  s0,word:string;
-  i,j,p:integer;
+// l - длина строки для генерации (равна 0 в случае полностью корректного ввода)
+// language - язык тренировки
+function Main(s:string; coef: integer; var  flag: boolean; var l: integer; language: string): string;
+var user_string: string; // строка, которую вводит пользователь
 begin
-  //readln(s0);
-  s0:=UpdateInput(length(s));
-  p:=length(s);
-  Result:='';
-  if (s0<>s) then
+  user_string := UpdateInput(length(s));
+  Result := '';
+  if (user_string <> s) then
   begin
-    if (s0<>'13') then
+    if (user_string <> '13') then
     begin
-      i:=1;
-      var chisl:integer;
-      chisl:=0;
-      DeleteSpaces(s, s0, coef);
       while (length(s)<>0) do
       begin
         if (s[1]=' ') then
         begin
-          if (s0[1]<>' ') then
-          begin
-            for var k := 1 to coef do
-            begin
-              Result:=Result+s[1];
-            end;
-            delete(s,1,1);
-            delete(s0,1,1);
-          end
-          else
-          begin
-            Result:=Result+s[1];
-            delete(s,1,1);
-            delete(s0,1,1);
-          end;
+          var j: integer;
+          j := 2;
+          while (s[j] = ' ') do inc(j);
+          var modified_spaces: string; // строка содержащая измененные пробелы
+          modified_spaces := ControlSpaces(copy(s, 1, j - 1), copy(user_string, 1, j - 1), coef);
+          Result := Result + modified_spaces;
+          delete(s, 1, j-1);
+          delete(user_string, 1, j-1);
         end
         else
         begin
-          if (pos(' ',s)<>0) then word:=copy(s,1,pos(' ',s)-1)
-          else word:=s;
-          if (pos(word,s0)=1) then
+          var word: string; // слово для сравнения 
+          if (pos(' ', s) <> 0) then word := copy(s, 1, pos(' ', s) - 1)
+          else word := s;
+          if (pos(word, user_string) = 1) then
           begin
-            delete(s,1,length(word));
-            delete(s0,1,length(word));
-            var t:string;
-            if (length(word)>10) then
+            delete(s, 1, length(word));
+            delete(user_string, 1, length(word));
+            var word_to_replace: string; // слово, которое заменится на другое
+            if (length(word) > 10) then
             begin
-              f1(t,length(word), lang);
-              while (t=word) do
-              begin
-                f1(t,length(word), lang);
-              end;
+              f1(word_to_replace, length(word), language);
+              while (word_to_replace = word) do f1(word_to_replace, length(word), language);
             end
             else
             begin
-              t:=GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(length(word)) +'.txt', n){zamena(dicti,length(word))};
-              while (t=word) do
-              begin
-                t:=GetWordFromFile('..\..\' + lang + '\' + lang + IntToStr(length(word)) +'.txt', n){zamena(length(word))};
-              end;
-              if (Random(5)=0) then
-                Word[1] := chr(Ord(Word[1]) - 32);
+              word_to_replace := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(length(word)) +'.txt', length(word));
+              while (word_to_replace = word) do word_to_replace := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(length(word)) +'.txt', length(word));
+              if (Random(5) = 0) then Word[1] := chr(Ord(Word[1]) - 32);
             end;
-            Result:=Result+t;
+            Result := Result + word_to_replace;
           end
           else
           begin
-            j:=1;
-            while (length(word)<>0) do
+            while (length(word) <> 0) do
             begin
-              if (s[1]=s0[1]) then
+              if (s[1] = user_string[1]) then
               begin
-                Result:=Result+s[1];
-                delete(s,1,1);
-                delete(s0,1,1);
-                delete(word,1,1);
+                Result := Result + s[1];
+                delete(s, 1, 1);
+                delete(user_string, 1, 1);
+                delete(word, 1, 1);
               end
               else
               begin
-                for var k := 1 to coef do
-                begin
-                  Result:=Result+s[1];
-                end;
-                delete(s,1,1);
-                delete(s0,1,1);
-                delete(word,1,1);
+                for var k := 1 to coef do Result := Result + s[1];
+                delete(s, 1, 1);
+                delete(user_string, 1, 1);
+                delete(word, 1, 1);
               end;
             end;
           end;
         end;
       end;
     end
-    else flag:=false;
-    l:=length(Result);
+    else flag := false;
+    l := length(Result);
   end;
 end;
-
-
 
 
 begin
@@ -466,20 +358,22 @@ begin
   var s,k :string;
   var flag:boolean;
   var coef,number_of_round,l:integer;
+  var language: string;
   l:=20;
-  Begining(Paragraph, lang);
-  //lang:='Rus';
+  Begining(Paragraph, language); // Если хотите все начало скипнуть то коментить эту строку и раскоментить один из языков
+  //language := 'Rus';
+  //language := 'Eng';
   number_of_round:=0;
   NewRound(number_of_round);
   coef:=number_of_round*2;
   flag:=true;
-  f1(s,l, lang);
+  f1(s,l, language);
   OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
   writeln;
   while flag do
   begin
     write(Paragraph);
-    s:=Main(s,number_of_round*2,flag,l, lang);
+    s:=Main(s,number_of_round*2,flag,l, language);
     writeln;
     if flag then
     if (s='') then
@@ -491,7 +385,7 @@ begin
         NewRound(number_of_round);
         l:=20;
       end;
-      f1(s,l, lang);
+      f1(s,l, language);
       OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
       writeln;
     end
@@ -510,7 +404,7 @@ begin
         NewRound(number_of_round);
         l:=20;
         s:='';
-        f1(s,l, lang);
+        f1(s,l, language);
         OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
         writeln;
       end;
@@ -519,6 +413,3 @@ begin
   OutputPamPamPam(Paragraph,'Тренировка закончена',70,0,0,100);
   readln;
 end.
-//длина строки консоли - 156
-{ghgh       ghgj   jf g g
-ghgh d d d ghgj d jf gdg}
