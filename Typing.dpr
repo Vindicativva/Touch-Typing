@@ -1,4 +1,4 @@
-﻿program Typing;
+program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
@@ -9,6 +9,29 @@ uses
 {$ENDIF}
 
 const Paragraph = '     '; //отступ перед выводом на экран
+
+procedure DisableResize;
+var
+  ConsoleWindow: HWND;
+  Style: LongInt;
+  screenWidth, screenHeight: Integer;
+begin
+  ConsoleWindow := GetConsoleWindow;
+  Style := GetWindowLong(ConsoleWindow, GWL_STYLE);
+  Style := Style and not WS_THICKFRAME;
+  SetWindowLong(ConsoleWindow, GWL_STYLE, Style);
+  if ConsoleWindow = 0 then
+    Exit;
+  // Получаем размеры экрана
+  screenWidth := GetSystemMetrics(SM_CXSCREEN);
+  screenHeight := GetSystemMetrics(SM_CYSCREEN);
+  // Устанавливаем размеры окна консоли так, чтобы оно занимало весь экран
+  SetWindowPos(ConsoleWindow, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_NOZORDER or SWP_FRAMECHANGED);
+  // Обновляем стиль окна, чтобы сохранить кнопки управления (закрыть, свернуть, развернуть)
+  SetWindowLong(ConsoleWindow, GWL_STYLE, GetWindowLong(ConsoleWindow, GWL_STYLE) or WS_OVERLAPPEDWINDOW);
+  ShowWindow(ConsoleWindow, SW_SHOWMAXIMIZED);
+end;
+
 
 // процедура ClearConsole - Очистка консоли
 procedure ClearConsole;
@@ -131,34 +154,34 @@ begin
   OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "Придумать название".', 70, 500, 300, 100);
   inc(cursor.y,2);
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-  OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', 70, 500, 200, 100);
+  OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', 40, 500, 200, 100);
   if (Rules(Paragraph) = 1) then
   begin
     ClearConsole;
     cursor.x:=0;
     cursor.y:=1;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-    OutputPamPamPam(Paragraph, 'Правила тренажера:', 70, 200, 150, 130);
+    OutputPamPamPam(Paragraph, 'Правила тренажера:', 50, 200, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '1.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Если правильно ввести строку, то новая строка уменьшиться на 2', 50, 500, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Если правильно ввести строку, то новая строка уменьшиться на 2', 40, 500, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '2.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Уровень заканчивается, когда новая строка становится нулевой', 50, 500, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Уровень заканчивается, когда новая строка становится нулевой', 40, 500, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '3.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'Каждый уровень сложнее предыдущего. Каждый неправильно введенный символ увеличивается в 2*(номер раунда) раз', 50, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'Каждый уровень сложнее предыдущего. Каждый неправильно введенный символ увеличивается в 2*(номер раунда) раз', 40, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '4.', 100, 500, 200, 100);
     writeln;
-    OutputPamPamPam(Paragraph + '  ', 'В случае частично верного написания строки каждое правильно введенное слово заменяется', 50, 150, 150, 130);
+    OutputPamPamPam(Paragraph + '  ', 'В случае частично верного написания строки каждое правильно введенное слово заменяется', 40, 150, 150, 130);
     inc(cursor.y,2);
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
     OutputPamPamPam(Paragraph, '5.', 100, 500, 200, 100);
@@ -181,7 +204,7 @@ begin
   OutputPamPamPam(Paragraph, 'Вам нужно выбрать язык для тренировки.', 50, 500, 100, 100);
   inc(cursor.y,2);
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-  OutputPamPamPam(Paragraph, 'Введите 1, если хотите начать тренировку на английском. Введите 0, если на русском: ', 80, 250, 100, 130);
+  OutputPamPamPam(Paragraph, 'Введите 1, если хотите начать тренировку на английском. Введите 0, если на русском: ', 40, 100, 100, 130);
   if (Rules(Paragraph) = 1) then language:='Eng'
   else language:='Rus';
 end;
@@ -276,9 +299,9 @@ end;
 // s - строка, которую надо ввести пользователю
 // coef - коэффициент
 // flag - становится ложью, когда пользователь предпочет завершить игру
-// l - длина строки для генерации (равна 0 в случае полностью корректного ввода)
+// length_of_generate - длина строки для генерации (равна 0 в случае полностью корректного ввода)
 // language - язык тренировки
-function Main(s:string; coef: integer; var  flag: boolean; var l: integer; language: string): string;
+function Main(s:string; coef: integer; var  flag: boolean; var length_of_generate: integer; language: string): string;
 var user_string: string; // строка, которую вводит пользователь
 begin
   user_string := UpdateInput(length(s));
@@ -347,7 +370,7 @@ begin
       end;
     end
     else flag := false;
-    l := length(Result);
+    length_of_generate := length(Result);
   end;
 end;
 
@@ -355,61 +378,62 @@ end;
 begin
   setconsolecp(1251);
   SetConsoleOutputCP(1251);
-  var s,k :string;
-  var flag:boolean;
-  var coef,number_of_round,l:integer;
-  var language: string;
-  l:=20;
+  DisableResize;
+  var s :string; // строка предлагаемая пользователю для ввода
+  var flag: boolean; // переменная состояния, ложно когда надо закончить тренировку
+  var number_of_round: integer; // номер раунда
+  var length_of_generate:integer; // длина строки для генерации
+  var language: string; // язык тренировки
+  length_of_generate:=20;
   Begining(Paragraph, language); // Если хотите все начало скипнуть то коментить эту строку и раскоментить один из языков
   //language := 'Rus';
   //language := 'Eng';
   number_of_round:=0;
   NewRound(number_of_round);
-  coef:=number_of_round*2;
   flag:=true;
-  f1(s,l, language);
+  f1(s, length_of_generate, language);
   OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
   writeln;
   while flag do
   begin
     write(Paragraph);
-    s:=Main(s,number_of_round*2,flag,l, language);
+    s:=Main(s,number_of_round*2,flag,length_of_generate, language);
     writeln;
     if flag then
-    if (s='') then
-    begin
-      dec(l,2);
-      l:=max(0,l);
-      if l=0 then
+      if ( s= '') then
       begin
-        NewRound(number_of_round);
-        l:=20;
-      end;
-      f1(s,l, language);
-      OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
-      writeln;
-    end
-    else
-    begin
-      if (length(s)<156) then
-      begin
-        OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
+        dec(length_of_generate, 2);
+        length_of_generate := max(0, length_of_generate);
+        if length_of_generate = 0 then
+        begin
+          NewRound(number_of_round);
+          length_of_generate := 20;
+        end;
+        f1(s, length_of_generate, language);
+        OutputPamPamPam(Paragraph, s, 10, 0, 0, 1000);
         writeln;
       end
       else
       begin
-        dec(number_of_round);
-        OutputPamPamPam(Paragraph,'Вы допустили слишком много ошибок. Нажмите enter для продолжения',50, 100, 0, 1000);
-        readln;
-        NewRound(number_of_round);
-        l:=20;
-        s:='';
-        f1(s,l, language);
-        OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
-        writeln;
+        if (length(s) < 156) then
+        begin
+          OutputPamPamPam(Paragraph, s, 10, 0, 0, 1000);
+          writeln;
+        end
+        else
+        begin
+          dec(number_of_round);
+          OutputPamPamPam(Paragraph, 'Вы допустили слишком много ошибок. Нажмите enter для продолжения', 50, 100, 0, 1000);
+          readln;
+          NewRound(number_of_round);
+          length_of_generate := 20;
+          s := '';
+          f1(s, length_of_generate, language);
+          OutputPamPamPam(Paragraph, s, 10, 0, 0, 1000);
+          writeln;
+        end;
       end;
-    end;
   end;
-  OutputPamPamPam(Paragraph,'Тренировка закончена',70,0,0,100);
+  OutputPamPamPam(Paragraph, 'Тренировка закончена', 70, 0, 0, 100);
   readln;
 end.
