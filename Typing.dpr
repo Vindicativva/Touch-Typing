@@ -1,4 +1,4 @@
-program Typing;
+﻿program Typing;
 
 uses
   {$IFDEF MSWINDOWS}
@@ -237,7 +237,7 @@ function GetWordFromFile(FileName: string; Number: integer): String;
     Randomize;
     arr := s.Split([' ']);
     CloseFile(WordFile);
-    Result := arr[random(Length(arr))];
+    Result := Utf8ToAnsi(arr[random(Length(arr))]);
   end;
 
 procedure f1(var str: string; k: integer; language: string);
@@ -376,8 +376,6 @@ end;
 
 
 begin
-  setconsolecp(1251);
-  SetConsoleOutputCP(1251);
   DisableResize;
   var s :string; // строка предлагаемая пользователю для ввода
   var flag: boolean; // переменная состояния, ложно когда надо закончить тренировку
