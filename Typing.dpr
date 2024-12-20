@@ -1,9 +1,13 @@
 ﻿program Typing;
 
+{$APPTYPE CONSOLE}
+{$R 'Resources.res' 'Resources.rc'}
+
 uses
   {$IFDEF MSWINDOWS}
   Windows,
   System.SysUtils,
+  Classes,
   Math;
 
 {$ENDIF}
@@ -68,10 +72,10 @@ end;
 // процедура OutputPamPamPam - позволяет выводить строку с задержкой
 // string_to_output - строка для вывода
 // delay_after_usual_letter - задержка после обычного сивола
-// delay_after_special_symbol - задержка после символа конца предложения 
+// delay_after_special_symbol - задержка после символа конца предложения
 // delay_after_comma - задержка после запятой
 // max_length_of_string - количество после которого вывод начнется с новой строки
-procedure OutputPamPamPam(const paragraph: string; string_to_output: string; delay_after_usual_letter: integer; 
+procedure OutputPamPamPam(const paragraph: string; string_to_output: string; delay_after_usual_letter: integer;
 delay_after_special_symbol: integer; delay_after_comma: integer; max_length_of_string: integer);
 var
   i:integer;
@@ -104,7 +108,7 @@ begin
   end;
 end;
 
-// функция Rules - предназначена для двоичного выбора, позволяет ввести только 1 и 0, возвращает соответвенно 
+// функция Rules - предназначена для двоичного выбора, позволяет ввести только 1 и 0, возвращает соответвенно
 function Rules(const Paragraph: string): byte;
 var decision_of_user: byte; // переменная решения пользователя
 begin
@@ -224,45 +228,59 @@ end;
 
 // функция GetWordFromFile - возвращает случайно выбранное слово заданной длины
 // FileName - имя файла, из которого будет браться слово
-// Number - удалить
-function GetWordFromFile(FileName: string; Number: integer): String;
+// Number - длина слова, которое нужно извлечь
+function GetWordFromFile(const Language: string; Number: integer): String;
   var
     WordFile: TextFile;
-    s: String;
-    arr: TArray<String>;
+    n: integer;
+    s1, Text: String;
+    ResStream: TResourceStream;
+    StringStream: TStringStream;
   begin
-    AssignFile(WordFile, FileName);
+    ResStream := TResourceStream.Create(HInstance, Language + IntToStr(Number), RT_RCDATA);
+    StringStream := TStringStream.Create;
+    StringStream.CopyFrom(ResStream, ResStream.Size);
+    Text := StringStream.DataString;
+    {AssignFile(WordFile, FileName);
     Reset(WordFile);
-    ReadLn(WordFile, s);
+    ReadLn(WordFile, s);       }
     Randomize;
-    arr := s.Split([' ']);
-    CloseFile(WordFile);
-    Result := Utf8ToAnsi(arr[random(Length(arr))]);
+    n := random((Length(Text)+1) div (Number+1));
+    {for i := 1 to Number do
+      s1 := s1 + s[n*(Number+1)+i];
+    CloseFile(WordFile);}
+    s1 := Copy(Text, (n*(Number+1)+1), Number);
+    Result := s1;
   end;
 
-procedure f1(var str: string; k: integer; language: string);
+
+// функция CreatingRandomString - создает случайно сгенерированную строку заданной длины
+// StringToGenerate - строка, которую надо сгенерировать
+// StrLength - длина строки для генерации
+// Language - строка, указывающая на словарь из которого нужно брать слова
+procedure CreatingRandomString(var StringToGenerate: string; StrLength: integer; const Language: string);
 var
-  l: integer;
-  word: string;
+  WordLength: integer; // Случайная длина слова
+  word: string; // Слово случайной длины
 begin
-  Str:= '';
+  StringToGenerate:= '';
   Randomize;
-  //language := 'Rus';
-  while length(str) < k do
+  while length(StringToGenerate) < StrLength do
   begin
-    if k >= 9 then l := Random(10) + 1
-    else l := Random(k) + 1;
-    word := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(l) +'.txt', k);
-    if Random(5) = 0 then word[1] := chr(Ord(word[1]) - 32);
-    if ((k - length(str) - (l + 1)) <= 6) and ((k - length(str) - (l + 1)) >= 2) then
+    if StrLength - length(StringToGenerate) >= 10 then WordLength := Random(10) + 1 // Подбор длины слова в зависимости от незаполненной длины
+    else WordLength := Random(StrLength - length(StringToGenerate)) + 1;
+    word := GetWordFromFile(Language, WordLength);
+    if Random(5) = 0 then word[1] := chr(Ord(word[1]) - 32);  // В 20% случаев слово будет начинаться с заглавной буквы
+    if ((StrLength - length(StringToGenerate) - (WordLength + 1)) <= 6) and ((StrLength - length(StringToGenerate) - (WordLength + 1)) >= 2) then
     begin
-      str := str + word + ' ';
-      str := str + GetWordFromFile('..\..\' + language + '\' + language + IntToStr(k - length(str)) +'.txt', k){Dic[f][k - length(str) - 1][Random(length(Dic[f][k - length(str) - 1]))]};
+      StringToGenerate := StringToGenerate + word + ' ';
+      StringToGenerate := StringToGenerate + GetWordFromFile(Language, StrLength - length(StringToGenerate));
     end
-    else if (k - length(str) - l) = 0 then str := str + word
-         else if (k - length(str) - (l + 1)) > 6 then str := str + word + ' ';
+    else if (StrLength - length(StringToGenerate) - WordLength) = 0 then StringToGenerate := StringToGenerate + word
+         else if (StrLength - length(StringToGenerate) - (WordLength + 1)) > 6 then StringToGenerate := StringToGenerate + word + ' ';
   end;
 end;
+
 
 // функция UpdateInput - Функция возвращающая введённую строку измененную под нужную длину
 //  length_of_string - Длина исходной строки
@@ -335,13 +353,13 @@ begin
             var word_to_replace: string; // слово, которое заменится на другое
             if (length(word) > 10) then
             begin
-              f1(word_to_replace, length(word), language);
-              while (word_to_replace = word) do f1(word_to_replace, length(word), language);
+              CreatingRandomString(word_to_replace, length(word), language);
+              while (word_to_replace = word) do CreatingRandomString(word_to_replace, length(word), language);
             end
             else
             begin
-              word_to_replace := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(length(word)) +'.txt', length(word));
-              while (word_to_replace = word) do word_to_replace := GetWordFromFile('..\..\' + language + '\' + language + IntToStr(length(word)) +'.txt', length(word));
+              word_to_replace := GetWordFromFile(language, length(word));
+              while (word_to_replace = word) do word_to_replace := GetWordFromFile(language, length(word));
               if (Random(5) = 0) then Word[1] := chr(Ord(Word[1]) - 32);
             end;
             Result := Result + word_to_replace;
@@ -376,6 +394,8 @@ end;
 
 
 begin
+  SetConsoleCP(1251);
+  SetConsoleOutputCP(1251);
   DisableResize;
   var s :string; // строка предлагаемая пользователю для ввода
   var flag: boolean; // переменная состояния, ложно когда надо закончить тренировку
@@ -383,13 +403,13 @@ begin
   var length_of_generate:integer; // длина строки для генерации
   var language: string; // язык тренировки
   length_of_generate:=20;
-  Begining(Paragraph, language); // Если хотите все начало скипнуть то коментить эту строку и раскоментить один из языков
+   Begining(Paragraph, language); // Если хотите все начало скипнуть то коментить эту строку и раскоментить один из языков
   //language := 'Rus';
   //language := 'Eng';
   number_of_round:=0;
   NewRound(number_of_round);
   flag:=true;
-  f1(s, length_of_generate, language);
+  CreatingRandomString(s, length_of_generate, language);
   OutputPamPamPam(Paragraph,s,10, 0, 0, 1000);
   writeln;
   while flag do
@@ -407,7 +427,7 @@ begin
           NewRound(number_of_round);
           length_of_generate := 20;
         end;
-        f1(s, length_of_generate, language);
+        CreatingRandomString(s, length_of_generate, language);
         OutputPamPamPam(Paragraph, s, 10, 0, 0, 1000);
         writeln;
       end
@@ -426,7 +446,7 @@ begin
           NewRound(number_of_round);
           length_of_generate := 20;
           s := '';
-          f1(s, length_of_generate, language);
+          CreatingRandomString(s, length_of_generate, language);
           OutputPamPamPam(Paragraph, s, 10, 0, 0, 1000);
           writeln;
         end;
