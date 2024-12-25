@@ -125,7 +125,12 @@
     animation-timing-function: ease-in-out;
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
-}  
+} 
+
+.title{
+    text-align: center;
+    margin-bottom: 50px;
+}
 
 @keyframes slideme {
   0% { left: -30px; margin-left: 0px; }
