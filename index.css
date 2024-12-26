@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'MyFont';
-    src: url('/fonts/ComicSansMs.woff') format('woff'),
-         url('/fonts/ComicSansMs.svg') format('svg'),
-         url('/fonts/ComicSansMs.ttf') format('ttf');
+    src: url('/Touch-Typing/fonts/ComicSansMs.woff') format('woff'),
+         url('/Touch-Typing/fonts/ComicSansMs.svg') format('svg'),
+         url('/Touch-Typing/fonts/ComicSansMs.ttf') format('ttf');
     font-weight: normal;
     font-style: normal;
     unicode-range: U+000-5FF;
