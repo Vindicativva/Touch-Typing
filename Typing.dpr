@@ -1,4 +1,4 @@
-﻿program Typing;
+program Typing;
 
 {$APPTYPE CONSOLE}
 {$R 'Resources.res' 'Resources.rc'}
@@ -155,7 +155,7 @@ begin
   cursor.x:=0;
   cursor.y:=4;
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
-  OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "Придумать название".', 70, 500, 300, 100);
+  OutputPamPamPam(Paragraph+'   ','Вас приветсвует тренажер слепой печати "FastFingers".', 70, 500, 300, 100);
   inc(cursor.y,2);
   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cursor);
   OutputPamPamPam(Paragraph, 'Введите 1, если хотите ознакомится с правилами. Введите 0, в противном случае: ', 40, 500, 200, 100);
@@ -285,7 +285,7 @@ end;
 // функция UpdateInput - Функция возвращающая введённую строку измененную под нужную длину
 //  length_of_string - Длина исходной строки
 function UpdateInput (length_of_string: integer): string;
-var 
+var
   user_string: string; //  user_string - Строка пользователя
   i: integer;
 begin
@@ -343,7 +343,7 @@ begin
         end
         else
         begin
-          var word: string; // слово для сравнения 
+          var word: string; // слово для сравнения
           if (pos(' ', s) <> 0) then word := copy(s, 1, pos(' ', s) - 1)
           else word := s;
           if (pos(word, user_string) = 1) then
