@@ -132,6 +132,12 @@
     margin-bottom: 50px;
 }
 
+.screenshot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @keyframes slideme {
   0% { left: -30px; margin-left: 0px; }
   30% { left: 111%; margin-left: 81px; }
