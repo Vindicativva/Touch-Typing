@@ -1,0 +1,153 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url('/fonts/ComicSansMs.woff') format('woff'),
+         url('/fonts/ComicSansMs.svg') format('svg'),
+         url('/fonts/ComicSansMs.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+    unicode-range: U+000-5FF;
+}
+
+
+.container-headtext{
+    position: relative;
+    text-align: center;
+    font-size: 31px;
+    font-family: MyFont;
+    margin: 5px 5px 0px 5px;
+}
+.container-manual{
+    margin: 0px 5px 20px 5px;
+    max-width: 920px;
+    font-size: 20px;
+    font-family: MyFont;
+    padding: 15px;
+    align-items: center;
+    background: linear-gradient(90deg, black 50%, transparent 50%), linear-gradient(90deg, black 50%, transparent 50%), linear-gradient(0deg, black 50%, transparent 50%), linear-gradient(0deg, black 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size: 15px 4px, 15px 4px, 4px 15px, 4px 15px;
+    background-position: 0px 0px, 200px 100px, 0px 100px, 200px 0px;
+    animation: border-dance 4s infinite linear;
+}
+
+.container-main-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s;
+    padding-bottom: 35px;
+    padding-top: 20px;
+}
+
+.custom-btn {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    width: auto;
+    height: auto;
+    padding: 8px 13px 10px 13px;        
+    border: none;
+    border-bottom: 2px solid #3e58ea;
+    border-radius: 30px;
+    position: relative;
+    font-weight: bold;
+    font-family: MyFont;
+    font-size: 30px;
+    text-decoration: none;
+    color: #FFF;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    overflow: hidden;
+    background: #536DFE;
+    background: #536dfe;
+    background: #536DFE;
+    -webkit-box-shadow: 0px 9px 16px 0px #536DFE;
+    box-shadow: 0px 9px 16px 0px #536DFE;
+    -webkit-transition: ease 0.3s;
+    transition: ease 0.3s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+.custom-btn:hover{
+    background: #495ed8;
+    
+}
+
+.custom-btn:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fa4923;
+    opacity: 0;
+    z-index: 1;
+    -webkit-transition: ease 0.3s;
+    transition: ease 0.3s;
+}
+
+.custom-btn:after {
+    content: "";
+    display: block;
+    width: 30px;
+    height: 300px;
+    margin-left: 60px;
+    background: #fff;
+    position: absolute;
+    left: -40px;
+    top: -150px;
+    z-index: 1;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transition: all 0.1s;
+    transition: all 0.1s;
+    -webkit-animation-name: slideme;
+    animation-name: slideme;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-delay: 0.05s;
+    animation-delay: 0.05s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+} 
+
+.title{
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.screenshot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes slideme {
+  0% { left: -30px; margin-left: 0px; }
+  30% { left: 111%; margin-left: 81px; }
+  100% { left: 111%; margin-left: 81px; } }
+
+@keyframes border-dance {
+    0% {
+        background-position: 0px 0px, 150px calc(100% - 100px + 100px), 0px 150px, calc(100% - 100px + 100px) 0px;
+    }
+    100% {
+        background-position: 150px 0px, 0px calc(100% - 100px + 100px), 0px 0px, calc(100% - 100px + 100px) 150px;
+    }
+}
