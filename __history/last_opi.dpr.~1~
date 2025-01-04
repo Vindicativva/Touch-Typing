@@ -1,0 +1,45 @@
+program last_opi;
+
+{$APPTYPE CONSOLE}
+
+{$R *.res}
+
+uses
+  System.SysUtils;
+
+procedure OutputPamPamPam(const paragraph: string; string_to_output: string; delay_after_usual_letter: integer;
+delay_after_special_symbol: integer; delay_after_comma: integer; max_length_of_string: integer);
+var
+  i:integer;
+begin
+  write(Paragraph);
+  for i := 1 to length(string_to_output) do
+  begin
+    case string_to_output[i] of
+      '!','.','?':
+      begin
+        write(string_to_output[i]);
+        sleep(delay_after_special_symbol);
+      end;
+      ',':
+      begin
+        write(string_to_output[i]);
+        sleep(delay_after_comma);
+      end
+      else
+      begin
+        write(string_to_output[i]);
+        sleep(delay_after_usual_letter);
+      end;
+    end;
+    if (i mod max_length_of_string = 0) and (i <> length(string_to_output)) then
+    begin
+      writeln;
+      write(Paragraph);
+    end;
+  end;
+end;
+
+begin
+
+end.
